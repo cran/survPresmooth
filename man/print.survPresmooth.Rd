@@ -29,6 +29,7 @@ Lopez-de-Ullibarri, I. and Jacome, M. A.
 }
 
 \examples{
+\dontrun{
 ## Load example dataset
 
 data(pscheck)
@@ -37,4 +38,5 @@ data(pscheck)
 # in the output the value of the pilot bandwidth
 
 print(presmooth(t, delta, pscheck), more = c("pilot.bw", "p.hat"), digits = 4)
+}
 }

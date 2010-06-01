@@ -60,20 +60,23 @@ The call the function was called with.
   \item{data}{
 The data used, returned as a data frame if the value of \code{control$save.data} is TRUE.
 }
-  \item{mise}{
-A vector or matrix with the values of the bootstrap MISE, returned for bootstrap bandwidth selection if the value of \code{control$save.mise} is TRUE.
-}
-  \item{bw.selec}{
-The value of the \code{bw.selec} argument.
-}
   \item{q.weight}{
 A numeric vector of length 2 giving the quantiles chosen as the ends of the support of the weight function.
 }
   \item{bw.selec}{
-The input for the \code{bw.selec} argument.
+The value of the \code{bw.selec} argument.
+}
+  \item{mise}{
+A vector or matrix with the values of the bootstrap MISE, returned for bootstrap bandwidth selection if the value of \code{control$save.mise} is TRUE.
+}
+  \item{trim}{
+The percentage of trimming applied in the bootstrap MISE computation.
 }
   \item{grid.pil}{
 The vector of numeric values defining the grid used for searching the pilot bandwidth when plug-in or bootstrap bandwidth selection is done.
+}
+  \item{problem.p1}{
+A character string reporting on the absence (problem.p1 = "no") or presence of numerical problems when computing the plug-in bandwidth in survival and cumulative hazard function estimation (in all other cases its value is NULL). Two type of problems are identified, both of them related to the estimation of the conditional probability of uncensoring, p. First, if p is estimated as constantly equal to 0 or 1, the presmoothing bandwidth is taken as two times the range of the observed times (problem.p1 = "p = 0/1"). Second, if the estimated p has a sudden change point, passing from constant values of 1 at one side to constant values of 0 at the other side, no presmoothing is carried out (problem.p1 = "overflow").
 }
   \item{pilot.bw}{
 The pilot bandwidth(s) used when plug-in or bootstrap bandwidth selection is done.
@@ -100,7 +103,7 @@ A numeric vector with the presmoothed estimates at points \code{x.est}.
 \details{
 In survival analysis with right-censored data, presmoothing (see references below for details) provides a method to obtain new estimators from classical estimators, essentially by replacing the indicator of non-censoring with a nonparametric estimate (in our implementation through the use of Nadaraya-Watson regression estimator) of the conditional probability of uncensoring. The \code{presmo}-\code{oth} function computes presmoothed versions of: 1) Kaplan-Meier survival function estimator, 2) Nelson-Aalen cumulative hazard function estimator, 3) the kernel density function estimator of Foldes-Rejto-Winter, and 4) the kernel hazard function estimator of Tanner-Wong (similar to that proposed by Yandell and Ramlau-Hansen). All presmoothed estimators have at least one presmoothing bandwidth (the smoothing parameter of the Nadaraya-Watson estimator), but in the case of the kernel estimators of density and hazard they have an additional smoothing bandwidth scaling the kernel.
 
-The \code{presmooth} function incorporates plug-in and bootstrap global bandwidth selectors for every estimator implemented. Plug-in bandwith selection is done according to  Cao et al. (2005) in the case of survival and cumulative hazard estimation, and following Jacome et al. (2008) together with the results given in Cao and Lopez-de-Ullibarri (2007) in the case of density and hazard estimation. As for bootstrap bandwidth selection our method follows the approach of Gonzalez-Manteiga et al. (1996). See Jacome et al. (2008) for more details in the case of density estimation. On the other hand, bandwidths can also be fixed by the user. When the presmoothing bandwidth is fixed at 0, the classical, non-presmoothed versions of the estimators are computed.
+The \code{presmooth} function incorporates plug-in and bootstrap global bandwidth selectors for every estimator implemented. Plug-in bandwith selection is done according to  Cao et al. (2005) in the case of survival and cumulative hazard estimation, and following Jacome et al. (2008) together with the results given in Cao and Lopez-de-Ullibarri (2007) in the case of density and hazard estimation. As for bootstrap bandwidth selection, our method follows the approach of Gonzalez-Manteiga et al. (1996). See Jacome et al. (2008) for more details in the case of density estimation. On the other hand, bandwidths can also be fixed by the user. When the presmoothing bandwidth is fixed at 0, the classical, non-presmoothed versions of the estimators are computed.
 
 In boundary regions, hazard and density estimates corrected for boundary effects can be obtained by selecting one of "left", "right", or "both" options of the \code{bound} argument (see Mueller and Wang, 1994). Note that negative values of the estimates, a known problem with boundary kernels, are set to 0. For correcting right-boundary effect, the maximum observed time is taken as the right endpoint of the support. Right-boundary correction should be used cautiously, due to the combined effect of the increased variance of the estimates and the small size of the risk set in the neighbouring of that end. With the default value of the \code{x.est} argument, estimation is restricted to values not greater than the 90th percentile of the observed times.
 }
@@ -127,9 +130,10 @@ Lopez-de-Ullibarri, I. and Jacome, M. A.
    \code{\link{control.presmooth}}
 }
 \examples{
+\dontrun{
+
 ## Load example dataset
 
-\dontrun{
 data(pscheck)
 
 ## Cumulative hazard function (chf) estimation
@@ -148,7 +152,7 @@ Hboot1 <- presmooth(t, delta, pscheck, estimand = "H", bw.selec = "bootstrap")
 set.seed(1)
 
 Hboot2 <- presmooth(t, delta, pscheck, estimand = "H", bw.selec = "bootstrap",
-	x.est = seq(0, 1, by = 0.02), grid.bw = seq(0.3, 0.6, by = 0.0025),
+	x.est = seq(0, 1, by = 0.02), grid.bw = seq(0.55, 0.65, by = 0.005),
 	control = control.presmooth(save.mise = TRUE))
 
 # A plot of the MISE, showing the bootstrap bandwidth
@@ -160,23 +164,23 @@ with(Hboot2,{
 		segments(bandwidth, 0, bandwidth, mise[grid.bw$grid.bw.1 == bandwidth],
 			lty = "dotted")
 	text(bandwidth, min(mise), bquote(paste("  ", b[boot] == .(bandwidth))),
-		adj = c(0,0))
+		adj = c(0, 0))
 })
 
 # A plot of the presmoothed chf compared with Nelson-Aalen estimate and
-# the true curve
+# the true curve. The point (0, 0) must be added.
 
-plot(Hboot2$x.est, Hboot2$estimate, xlab = "t", ylab = "Cumulative hazard",
-		type = "s")
+plot(c(0, Hboot2$x.est), c(0, Hboot2$estimate), xlab = "t",
+	ylab = "Cumulative hazard", type = "s")
 
 Hna <- presmooth(t, delta, pscheck, estimand = "H", bw.selec = "fixed",
 	fixed.bw = 0)
 
-lines(Hna$x.est, Hna$estimate, type = "s", col = "red")
+lines(c(0, Hna$x.est), c(0, Hna$estimate), type = "s", col = "red")
 
 curve(x^3, add = TRUE, col = "grey", lty = "dotted")
 
-legend("bottomright", legend = c("Presmoothed Nelson-Aalen", "Nelson-Aalen",
+legend("topleft", legend = c("Presmoothed Nelson-Aalen", "Nelson-Aalen",
 	"True"), col = c("black", "red", "grey"), lty = c("solid", "solid", "dotted"))
 
 ## Hazard function (hf) estimation
@@ -193,7 +197,7 @@ hpi1 <- presmooth(t, delta, pscheck, estimand = "h", bw.selec = "plug-in",
 
 hpi2 <- presmooth(t, delta, pscheck, estimand = "h", bw.selec = "plug-in",
 	bound = "right", x.est = seq(0, max(pscheck$t), by = 0.02), grid.bw.pil =
-	seq(range(pscheck$t)[1], range(pscheck)[2], seq = 0.01),
+	seq(range(pscheck$t)[1], range(pscheck$t)[2], seq = 0.01),
 	control = control.presmooth(q.weight = c(0.25, 0.75)))
 
 plot(hpi1$x.est, hpi1$estimate, xlab = "t", ylab = "Hazard",

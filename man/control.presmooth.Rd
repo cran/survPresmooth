@@ -8,14 +8,14 @@ Control Values for presmooth() Function
 This function returns a list of values for control parameters of the \code{presmooth} function.
 }
 \usage{
-control.presmooth(n.boot = 500, q.weight = c(0.2, 0.8), 
+control.presmooth(n.boot = c(5000, 1000), q.weight = c(0.2, 0.8), 
 	length.grid.bw.plugin = 100, length.grid.ise = 100,
 	pilot.par.ini= NULL, save.data = FALSE, save.mise = FALSE,
-	na.action = na.omit)
+	trim = 0, na.action = na.omit)
 }
 \arguments{
   \item{n.boot}{
-A numeric value specifying the number of bootstrap resamples used in bootstrap bandwidth selection. The default is 500.
+A numeric vector of length 2 or, alternatively, a numeric value specifying the number of bootstrap resamples used in bootstrap bandwidth selection. If a vector, the first element is used for S and H estimation, and the second for f and h. The default is c(5000, 1000).
 }
   \item{q.weight}{
 A numeric vector of length 2 specifying the order of quantiles of the observed times that determine the left- and right-ends of the support of the weight function. The default value is c(0.2, 0.8).
@@ -35,12 +35,19 @@ A logical value specifying if the data must be saved as a component of the value
   \item{save.mise}{
 A logical value specifying if the MISE computed for bootstrap bandwidth selection must be saved as a component of the value returned by the \code{presmooth} function. The default is FALSE.
 }
+  \item{trim}{
+A numeric atomic value specifying the fraction of trimming applied when computing the MISE in bootstrap bandwidth selection. The default is 0.
+}
   \item{na.action}{
 A function specifying how to handle missing values. The default value (na.omit), causes the deletion of the rows containing missing values in the (internal) data frame formed by the \code{times} and \code{status} arguments of the call to the \code{presmo}-\code{oth} function.
 }
 }
 \value{
 A list whose components are the arguments of the function, its defaults being replaced with the values the function was called with.
+}
+\details{
+The default values of \code{n.boot} represent a tradeoff between computational speed and precision in bootstrap bandwidth selection. If enough computing power or time are available, it is recommended to increase the number of bootstrap resamples up to 50000 (which could be very slow for hazard and density estimation). 
+The value of MISE may be greatly influenced by the presence of extreme values, which consequently may determine the value of the selected bootstrap bandwidth. The \code{trim} argument makes it possible to compute trimmed means as more robust, alternative approximations of the MISE. The computation of trimmed MISE is mainly reccomended when the bootstrap bandwidth(s) selected without trimming fall(s) on the boundary of the grid used for bandwidth search.
 }
 \author{
 Lopez-de-Ullibarri, I. and Jacome, M. A.
