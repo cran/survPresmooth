@@ -1,7 +1,6 @@
 #include "survPresmooth.h"
-
-void misevect(double *t, int *delta, int *n, int *nboot, double *gridise, int *legridise, double *gridbw1, int *legridbw1, double *gridbw2, int *legridbw2,
-int *nkernel, int *nestimand, double *phat, double *estim, double *misev){
+void isevect(double *t, int *delta, int *n, int *nboot, double *gridise, int *legridise, double *gridbw1, int *legridbw1, double *gridbw2, int *legridbw2,
+int *nkernel, int * dup, int *nestimand, double *phat, double *estim, double *isev){
 	int i, j, k, boot, *indices, *deltaboot, *pnull;
 	double *pnull2, *ptemp, *estimboot, *tboot;
 	
@@ -15,6 +14,7 @@ int *nkernel, int *nestimand, double *phat, double *estim, double *misev){
 
     GetRNGstate();
 	switch(*nestimand) {
+// S
 	case 1:		
 		for (boot = 0; boot < *nboot; boot++){
 			for (i = 0; i < *n; i++)
@@ -26,14 +26,15 @@ int *nkernel, int *nestimand, double *phat, double *estim, double *misev){
 			}
 			for (i = 0; i < *legridbw1; i++){
 				nadarayawatson(tboot, n, tboot, deltaboot, n, &(gridbw1[i]), nkernel, ptemp);
-				presmestim(gridise, legridise, tboot, n, pnull2, pnull, pnull, ptemp, nestimand, estimboot);
-				misev[i] += (estimboot[0] - estim[0])*(estimboot[0] - estim[0])/2;
+				presmestim(gridise, legridise, tboot, n, pnull2, pnull, pnull, ptemp, pnull, nestimand, estimboot);
+				isev[boot * (*legridbw1) + i] = (estimboot[0] - estim[0])*(estimboot[0] - estim[0])/2;
 				for (k = 1; k < (*legridise - 1); k++)
-					misev[i] += (estimboot[k] - estim[k])*(estimboot[k] - estim[k]);
-				misev[i] += (estimboot[k] - estim[k])*(estimboot[k] - estim[k])/2;
+					isev[boot * (*legridbw1) + i] += (estimboot[k] - estim[k])*(estimboot[k] - estim[k]);
+				isev[boot * (*legridbw1) + i] += (estimboot[k] - estim[k])*(estimboot[k] - estim[k])/2;
 			}
 		}
 		break;
+// H
 	case 2:
 		for (boot = 0; boot < *nboot; boot++){
 			for (i = 0; i < *n; i++)
@@ -45,14 +46,16 @@ int *nkernel, int *nestimand, double *phat, double *estim, double *misev){
 			}
 			for (i = 0; i < *legridbw1; i++){
 				nadarayawatson(tboot, n, tboot, deltaboot, n, &(gridbw1[i]), nkernel, ptemp);
-				presmestim(gridise, legridise, tboot, n, gridbw2, nkernel, pnull, ptemp, nestimand, estimboot);
-				misev[i] += (estimboot[0] - estim[0])*(estimboot[0] - estim[0])/2;
+				presmestim(gridise, legridise, tboot, n, gridbw2, nkernel, pnull, ptemp, dup, nestimand, estimboot);
+				isev[boot * (*legridbw1) + i] = (estimboot[0] - estim[0])*(estimboot[0] - estim[0])/2;
 				for (k = 1; k < (*legridise - 1); k++)
-					misev[i] += (estimboot[k] - estim[k])*(estimboot[k] - estim[k]);
-				misev[i] += (estimboot[k] - estim[k])*(estimboot[k] - estim[k])/2;
+					isev[boot * (*legridbw1) + i] += (estimboot[k] - estim[k])*(estimboot[k] - estim[k]);
+				isev[boot * (*legridbw1) + i] += (estimboot[k] - estim[k])*(estimboot[k] - estim[k])/2;
 			}
 		}
 		break;
+// f
+
 	case 3:
 		for (boot = 0; boot < *nboot; boot++){
 			for (i = 0; i < *n; i++)
@@ -66,13 +69,14 @@ int *nkernel, int *nestimand, double *phat, double *estim, double *misev){
 				for (i = 0; i < *legridbw1; i++){
 					nadarayawatson(tboot, n, tboot, deltaboot, n, &(gridbw1[i]), nkernel, ptemp);
 					presmdensfast(gridise, legridise, tboot, n, &(gridbw2[j]), nkernel, ptemp, estimboot);
-					misev[i + j * (*legridbw1)] += (estimboot[0] - estim[0])*(estimboot[0] - estim[0])/2;
+					isev[boot * (*legridbw1) * (*legridbw2) + j * (*legridbw1) + i] = (estimboot[0] - estim[0])*(estimboot[0] - estim[0])/2;
 					for (k = 1; k < (*legridise - 1); k++)
-						misev[i + j * (*legridbw1)] += (estimboot[k] - estim[k])*(estimboot[k] - estim[k]);
-					misev[i + j * (*legridbw1)] += (estimboot[k] - estim[k])*(estimboot[k] - estim[k])/2;
+						isev[boot * (*legridbw1) * (*legridbw2) + j * (*legridbw1) + i] += (estimboot[k] - estim[k])*(estimboot[k] - estim[k]);
+					isev[boot * (*legridbw1) * (*legridbw2) + j * (*legridbw1) + i] += (estimboot[k] - estim[k])*(estimboot[k] - estim[k])/2;
 				}
 		}
 		break;
+// h
 	case 4:
 		for (boot = 0; boot < *nboot; boot++){
 			for (i = 0; i < *n; i++)
@@ -85,11 +89,11 @@ int *nkernel, int *nestimand, double *phat, double *estim, double *misev){
 			for (j = 0; j < *legridbw2; j++)
 				for (i = 0; i < *legridbw1; i++){
 					nadarayawatson(tboot, n, tboot, deltaboot, n, &(gridbw1[i]), nkernel, ptemp);
-					presmtwfast(gridise, legridise, tboot, n, &(gridbw2[j]), nkernel, ptemp, estimboot);
-					misev[i + j * (*legridbw1)] += (estimboot[0] - estim[0])*(estimboot[0] - estim[0])/2;
+					presmtwfast(gridise, legridise, tboot, n, &(gridbw2[j]), nkernel, dup, ptemp, estimboot);
+					isev[boot * (*legridbw1) * (*legridbw2) + j * (*legridbw1) + i] = (estimboot[0] - estim[0])*(estimboot[0] - estim[0])/2;
 					for (k = 1; k < (*legridise - 1); k++)
-						misev[i + j * (*legridbw1)] += (estimboot[k] - estim[k])*(estimboot[k] - estim[k]);
-					misev[i + j * (*legridbw1)] += (estimboot[k] - estim[k])*(estimboot[k] - estim[k])/2;
+						isev[boot * (*legridbw1) * (*legridbw2) + j * (*legridbw1) + i] += (estimboot[k] - estim[k])*(estimboot[k] - estim[k]);
+					isev[boot * (*legridbw1) * (*legridbw2) + j * (*legridbw1) + i] += (estimboot[k] - estim[k])*(estimboot[k] - estim[k])/2;
 				}
 		}
 		break;

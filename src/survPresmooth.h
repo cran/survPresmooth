@@ -28,9 +28,9 @@ void nadarayawatsonder(double *x, int *nx, double *t, int *delta, int *nt, doubl
 
 void plogistder(double *x, int *nx, double *coef, int *deriv, double *pder);
 
-void presmestim(double *x, int *nx, double *t, int *nt, double *bw, int *nkernel, int *nbound, double *phat, int *nestimand, double *pest);
+void presmestim(double *x, int *nx, double *t, int *nt, double *bw, int *nkernel, int *nbound, double *phat, int *dup, int *nestimand, double *pest);
 
-void presmtwfast(double *x, int *nx, double *t, int *nt, double *bw, int *nkernel, double *phat, double *ptw);
+void presmtwfast(double *x, int *nx, double *t, int *nt, double *bw, int *nkernel, int *dup, double *phat, double *ptw);
 
 void presmdensfast(double *x, int *nx, double *t, int *nt, double *bw, int *nkernel, double *phat, double *pd);
 

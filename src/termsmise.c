@@ -31,7 +31,7 @@ void termsmise(double *t, int *delta, int *n, double *esf, double *grid, int *le
     if(*nestimand == 3){
 // f
 		nadarayawatson(t, n, t, delta, n, &(bw[0]), nkernel, pt);
-		presmestim(grid, legrid, t, n, pnull2, pnull, pnull, pt, temp, S);
+		presmestim(grid, legrid, t, n, pnull2, pnull, pnull, pt, pnull, temp, S);
 		presmdens2der(grid, legrid, t, n, &(bw[2]), nkernel, pt, f2);
 		for (i = 0; i < *legrid; i++){
 			integrand1[i] = pow(f2[i], 2);
