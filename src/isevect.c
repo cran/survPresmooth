@@ -1,4 +1,5 @@
 #include "survPresmooth.h"
+
 void isevect(double *t, int *delta, int *n, int *nboot, double *gridise, int *legridise, double *gridbw1, int *legridbw1, double *gridbw2, int *legridbw2,
 int *nkernel, int * dup, int *nestimand, double *phat, double *estim, double *isev){
 	int i, j, k, boot, *indices, *deltaboot, *pnull;
@@ -25,6 +26,8 @@ int *nkernel, int * dup, int *nestimand, double *phat, double *estim, double *is
 				deltaboot[i] = (int)rbinom(1, phat[indices[i]]);
 			}
 			for (i = 0; i < *legridbw1; i++){
+				R_FlushConsole();
+				R_ProcessEvents();
 				nadarayawatson(tboot, n, tboot, deltaboot, n, &(gridbw1[i]), nkernel, ptemp);
 				presmestim(gridise, legridise, tboot, n, pnull2, pnull, pnull, ptemp, pnull, nestimand, estimboot);
 				isev[boot * (*legridbw1) + i] = (estimboot[0] - estim[0])*(estimboot[0] - estim[0])/2;
@@ -45,6 +48,8 @@ int *nkernel, int * dup, int *nestimand, double *phat, double *estim, double *is
 				deltaboot[i] = (int)rbinom(1, phat[indices[i]]);
 			}
 			for (i = 0; i < *legridbw1; i++){
+				R_FlushConsole();
+				R_ProcessEvents();
 				nadarayawatson(tboot, n, tboot, deltaboot, n, &(gridbw1[i]), nkernel, ptemp);
 				presmestim(gridise, legridise, tboot, n, gridbw2, nkernel, pnull, ptemp, dup, nestimand, estimboot);
 				isev[boot * (*legridbw1) + i] = (estimboot[0] - estim[0])*(estimboot[0] - estim[0])/2;
@@ -67,6 +72,8 @@ int *nkernel, int * dup, int *nestimand, double *phat, double *estim, double *is
 			}
 			for (j = 0; j < *legridbw2; j++)
 				for (i = 0; i < *legridbw1; i++){
+					R_FlushConsole();
+					R_ProcessEvents();
 					nadarayawatson(tboot, n, tboot, deltaboot, n, &(gridbw1[i]), nkernel, ptemp);
 					presmdensfast(gridise, legridise, tboot, n, &(gridbw2[j]), nkernel, ptemp, estimboot);
 					isev[boot * (*legridbw1) * (*legridbw2) + j * (*legridbw1) + i] = (estimboot[0] - estim[0])*(estimboot[0] - estim[0])/2;
@@ -88,6 +95,8 @@ int *nkernel, int * dup, int *nestimand, double *phat, double *estim, double *is
 			}
 			for (j = 0; j < *legridbw2; j++)
 				for (i = 0; i < *legridbw1; i++){
+					R_FlushConsole();
+					R_ProcessEvents();
 					nadarayawatson(tboot, n, tboot, deltaboot, n, &(gridbw1[i]), nkernel, ptemp);
 					presmtwfast(gridise, legridise, tboot, n, &(gridbw2[j]), nkernel, dup, ptemp, estimboot);
 					isev[boot * (*legridbw1) * (*legridbw2) + j * (*legridbw1) + i] = (estimboot[0] - estim[0])*(estimboot[0] - estim[0])/2;
