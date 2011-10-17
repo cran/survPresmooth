@@ -18,10 +18,6 @@ Optional arguments for the default method (i.e. \code{print.default}) of the \co
 \seealso{\code{\link{presmooth}}}
 \examples{
 	\dontrun{
-## Load example dataset
-
-data(pscheck)
-
 ## Printing an object of class \code{survPresmooth} with 4 digits,
 # including in the output the value of the pilot bandwidth
 
