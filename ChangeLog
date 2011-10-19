@@ -1,0 +1,137 @@
+Changes in version 1.1-2
+	
+	2011/10/17 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+
+	* ChangeLog: file added.
+	
+	* DESCRIPTION: 'LazyLoad: no' deleted; 'LazyData: yes' added.
+	
+	* NAMESPACE: file added.
+	
+	* man/presmooth.Rd (examples): 'data(pscheck)' deleted.
+	
+	* man/print.survPresmooth.Rd (examples): 'data(pscheck)' deleted.
+	
+Changes in version 1.1-1
+	
+	2011/03/09 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+	
+	* R/presmooth.R (control.presmooth): default value of 'k' is 1.
+	* man/control.presmooth.Rd (usage, arguments): default value of 'k' is 1.
+	
+	2011/02/04 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+	
+	* R/presmooth.R (control.presmooth): new argument 'k' added.
+	* man/control.presmooth.Rd (usage, arguments): new argument 'k' added.
+	
+	2011/01/13 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+	
+	* src/isevect.c: R_FlushConsole(); R_ProcessEvents() added in each of the main loops for S, H, f and h.
+	
+	* man/control.presmooth.Rd (details): the recommended 'nboot' is 10000.
+	
+	* man/presmooth.Rd (arguments): the explanation about 'bound' is changed.
+	(details): the upper bound for the selected bandwidth and the meaning of 'q.weight' are explained.
+	
+	2011/01/07 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+	
+	* R/presmooth.R (presmooth): for the bootstrap bandwidth, the 2nd pilot for h is computed with the same formula as for f.
+	
+	2011/01/04 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+	
+	* DESCRIPTION: description changed.
+	
+	* man/survPresmooth-package.Rd: file deleted.
+	
+	* man/presmooth.Rd (value): heading changed.
+	
+	2011/01/02 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+	
+	* R/presmooth.R (print.survPresmooth): some minor modifications.
+	
+	2010/12/28 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+	
+	* DESCRIPTION: LazyLoad: no.
+	
+	* R/presmooth.R (presmooth): definition of 'grid.bw' changed; the role of 'median(dfr$t)' is changed by 'range.t'.
+	
+	* man/control.presmooth.Rd: 'Rdversion' deleted.
+	* man/presmooth.Rd: 'Rdversion' deleted; '...' changed by \dots or \ldots.
+	* man/print.survPresmooth.Rd: 'Rdversion' deleted; ; '...' changed by \dots or \ldots.
+	* man/pscheck.Rd: 'Rdversion' deleted; '\docType{data}' added.
+	
+Changes in version 1.1-0
+	
+	2010/09/17 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+	
+	* src/misevect.c: deleted.
+	
+	* src/isevect.c: new funtion replacing 'misevect.c'
+        
+	* R/presmooth.R (control.presmooth): new argument 'trim' added.
+        * man/control.presmooth.Rd: new argument 'trim' added.
+	
+	* man/presmooth.Rd: 'bw.selec' was duplicated; the position of 'mise' and 'q.weight' was incorrect; 'trim' component added.
+	
+	* R/presmooth.R (presmooth): call to 'misevect' replaced with call to 'isevect' when computing the bootstrap bandwidths; the list returned includes component 'trim'; component 'mise' computed without dividing by 'n.boot'.
+	
+	* R/presmooth.R (print.survPresmooth): component 'trim' added to 'ext.names'.
+	
+	2010/08/29 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+	
+	* src/presmestim.c: changes for H made on 2010/08/28 applied to h.
+	
+	* src/misevect.c: for h, the value of 'dup' is passed to the argument 'dup' of presmtwfast.c.
+	
+	* src/presmtwfast.c: same changes made to presmestim.c on 2010/08/28.
+	
+	* R/presmooth.R (control.presmooth): default value of 'n.boot' is c(5000, 1000).
+	* man/control.presmooth.Rd (arguments): explanation about 'n.boot' changed.
+	
+	* man/print.survPresmooth.Rd (examples): not run.
+	
+	* R/presmooth.R (presmooth): calls to presmtwfast.c include the value of the argument 'dup'; 'n.boot' redefined.
+	
+	* man/presmooth.Rd (examples): search grid for the bandwidth for 'Hboot2' changed.
+	
+	2010/08/28 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+	
+	* src/presmestim.c: new argument 'dup' added; new variable 'counter' defined; if-else added in the computation of H:.
+	
+	* src/termsmise.c: in the call to presmestim.c, a 'dummy', pnull, is passed as the value for 'dup'.
+	
+	* src/misevect.c: new argument 'dup' added; in the calls to presmestim.c, a 'dummy', pnull, (for S) or dup (for H) is passed as the value for 'dup'.
+	
+	* R/presmooth.R (presmooth): 'dup' defined; calls to presmestim.c include 'dup'.
+	
+	* man/presmooth.Rd (examples): error in the definition of hpi2 corrected.
+	
+	2010/07/18 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+	
+	* data/pscheck.rda: format changed to 'rda'.
+	
+	2010/07/11 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+	
+	* R/presmooth.R (presmooth): the if-else added on 2010/07/07 is slightly modified; the procedure implemented on 2010/07/01 for detecting p=1 is extended to deal with the case p=0; the warning message and the value of 'problem' are changed.
+	
+	2010/07/07 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+	
+	* R/presmooth.R (presmooth): 'problem' defined and its value returned in the result; 'coef.logis' defined; 'ind.p1' deleted; if-else added implementing a procedure for detecting overflow when computing C1; the 'lower' argument of integrate() when computing 'C1integrand1' and 'C1integrand2' is changed.
+	
+	2010/07/06 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+	
+	* R/presmooth.R (presmooth): when computing the 2nd pilot for the bootstrap bandwidth for f and h, 'if(estparboot[5] < 0.1)' replaced with 'if( estparboot[5] < 0.1 | estparboot[5] > 0.9)'; when computing the bootstrap bandwidth, 'pos.min.mise <- which(mise == min.mise)' replaced with 'pos.min.mise <- max(which(mise == min.mise))'.
+	
+	2010/07/01 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+	
+	* R/presmooth.R (presmooth): when computing the pilots and plug-in bandwidths for S and H estimation, an if-else is added, implementing a procedure to use in case p is estimated as equal to 1; new variable 'ind.p1' defined and its value returned in the result; 'p', the Nadaraya-Watson estimate of p, renamed as 'p.nw'.
+	
+	2010/06/26 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+	
+	* R/presmooth.R (presmooth): when computing the 2nd pilot for the plug-in bandwidth for f, 'if(estparplug[5] < 0.1)' replaced with 'if( estparplug[5] < 0.1 | estparplug[5] > 0.9)'; when computing the 3rd pilot for the plug-in bandwidth for f, 'if(estparplug2[5] < 0.1)' replaced with 'if( estparplug2[5] < 0.1 | estparplug2[5] > 0.9)'; when computing the 2nd pilot for the plug-¡n bandwidth for h, 'if(estparplug[5] < 0.1)' replaced with 'if( estparplug[5] < 0.1 | estparplug[5] > 0.9)'.
+
+
+
+
+
+

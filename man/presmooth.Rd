@@ -117,9 +117,7 @@ Mueller, H. G. and Wang, J. L. (1994) "Hazard rate estimation under random censo
 \seealso{\code{\link{control.presmooth}}}
 \examples{
 	\dontrun{
-## Load example dataset
-
-data(pscheck)
+## Analysis with the example dataset (pscheck)
 
 ## Cumulative hazard function (chf) estimation
 

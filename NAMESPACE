@@ -1,0 +1,12 @@
+useDynLib(survPresmooth)
+
+import(stats)
+
+export(
+  control.presmooth,
+  presmooth
+)
+
+S3method(print, survPresmooth)
+
+
