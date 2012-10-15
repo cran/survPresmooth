@@ -56,7 +56,7 @@ void pilot2forhintegrand(double *grid, int *legrid, double *par, int *lepar, int
 				dweibullder(grid, legrid, &(par[4]), deriv, d33);
 				for (i = 0; i < *legrid; i++)
 					pilot2hint[i] = pow(par[6] * d31[i] + par[7] * d32[i] + (1 - par[6] - par[7]) * d33[i], 2);
-			}
+				}
 				break;
 			default:
 				break;

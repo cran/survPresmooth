@@ -1,7 +1,5 @@
 #include "survPresmooth.h"
 
-void presmdens2der(double *x, int *nx, double *t, int *nt, double *bw, int *nkernel, double *phat, double *pd);
-
 void termsmise(double *t, int *delta, int *n, double *esf, double *grid, int *legrid, double *step, double *bw, int *nkernel, int *nestimand, double *alpha, double *integral1, double *integral2, double *integral3, double *integral4, double *integral5){
 
 	int i, *temp, *pnull;
@@ -53,11 +51,16 @@ void termsmise(double *t, int *delta, int *n, double *esf, double *grid, int *le
 			integrand5[i] = h[i]*p[i]*(1 - p[i]) / pow(esf[i],2);
 		}
 	}
-	simpson(integrand1, legrid, step, integral1);
-	simpson(integrand2, legrid, step, integral2);
-	simpson(integrand3, legrid, step, integral3);
-	simpson(integrand4, legrid, step, integral4);
-	simpson(integrand5, legrid, step, integral5);
+	simpson(integrand1, legrid, integral1);
+	simpson(integrand2, legrid, integral2);
+	simpson(integrand3, legrid, integral3);
+	simpson(integrand4, legrid, integral4);
+	simpson(integrand5, legrid, integral5);
+    *integral1 *= *step;
+	*integral2 *= *step;
+	*integral3 *= *step;
+	*integral4 *= *step;
+	*integral5 *= *step;
 	free(temp);
 	free(pnull);
 	free(pnull2);
@@ -77,21 +80,6 @@ void termsmise(double *t, int *delta, int *n, double *esf, double *grid, int *le
 	free(integrand5);
 }
 
-void presmdens2der(double *x, int *nx, double *t, int *nt, double *bw, int *nkernel, double *phat, double *pd){
-	int i, j;
-	double *w;
-
-    w = malloc(*nt * sizeof(double));
-	weightspresmkm(t, nt, phat, w);
-	for (i = 0; i < *nx; i++){
-		pd[i] = 0;
-		for (j = 0; j < *nt; j++)
-			if (fabs(x[i] - t[j]) < *bw)
-				pd[i] += kernelder((x[i] - t[j])/(*bw), *nkernel, 2) * w[j];
-		pd[i] = pd[i] / pow(*bw, 3);
-	}
-	free(w);
-}
 
 
 

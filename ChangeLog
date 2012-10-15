@@ -1,3 +1,41 @@
+Changes in version 1.1-3
+
+	2012/10/15 Ignacio Lopez-de-Ullibarri <ilu@udc.es>	
+
+	* R/presmooth.R (control.presmooth): the 'k' argument has been removed.
+
+	* R/presmooth.R (print.survPresmooth): the call is printed by default; new argument 'long' added. The printed text now distinguishes between presmoothed and non-presmoothed estimates; for f or h estimation, the value of 'bound' is printed; components 'call', 'bw.selec', 'bandwidth', 'x.est', 'estimand' removed from 'ext.names'; the components printed by default cannot be printed twice; some other little modifications and minor bugs corrected.
+
+	* R/presmooth.R (presmooth): 'k' (more precisely, 'control$k') has been removed; in the computation of 'bw' for the plug-in bandwidth of h, 'pilot.bw[-3]' is replaced with 'pilot.bw' in the call to 'constrOptim'; when computing the bootstrap bandwidth for f and h, an if-else is added in the computations for the 2nd pilot: the else arm gives Muller pilot as an alternative when all data are censored within the interval taken; the program stops if 'bw.selec' does not (partially) match with one of 'plug-in', 'bootstrap' or 'fixed'; when partial matching is present, the correct values of 'kernel', 'bound' and 'bw.selec' are calculated; now the value of 'bound' is also returned.
+
+	* man/control.presmooth.Rd (usage, arguments, examples): 'k' has been removed; some retyping for improving the PDF manual.
+
+	* man/print.survPresmooth.Rd (arguments, examples): more details on the argument 'more' are given; some retyping for improving the PDF manual.
+
+	* man/presmooth.Rd (usage, examples): corrected a bug repeated several times in the examples ('seq' instead of 'by' as an argument to seq); 'grid.bw' changed when computing the 'hboot' object; '\ldots' replaced with '...'; the 'dboot2' object is not computed; the last plot is redone; some retyping for improving the PDF manual.
+
+	2012/10/09 Ignacio Lopez-de-Ullibarri <ilu@udc.es>	
+
+	* R/presmooth.R (presmooth): when computing the plug-in bandwidth for S or H, if 'Q' and 'A' are 0 'bw' is set to 0; when all the times are censored a warning is printed and NA returned for both the selected bandwidth and the estimate; the maximum value for all the pilots is set to control$k*range.t; the definition of 'grid.bw.pil' is changed; since 'grid.bw.pil' is not needed for bootstrap bandwidth selection when 'presmoothing' is FALSE, the new condition for computing or returning this grid is 'if(((n.bw.selec == 1) & forh) | (n.bw.selec == 2 & presmoothing))'.
+
+	* man/control.presmooth.Rd (arguments, details): the length of 'pilot.par.ini' is 8 instead 6 and an explanation of the meaning of each component is included.
+
+	2012/10/07 Ignacio Lopez-de-Ullibarri <ilu@udc.es>	
+
+	* src/termsmisenopresmooth.c: new function similar to 'termsmise.c' for the case without presmoothing.
+
+	* src/isevect.c: numerical integration is done with Simpson's rule, instead of trapezium rule. Some pointers (pnull, pnull2) are initialized, or the memory allocated to them freed, within the arm of the switch where they are used. A new if-else is added, the if arm for the old code, and the else arm for the case with presmoothing = FALSE.
+
+	* src/simpson.c: the argument 'step' is deleted (the multiplication by step is now done outside the function). Also, the numerical constants are written with a decimal point (although this has no effect on the results).
+
+	* R/presmooth.R (presmooth): new argument 'presmoothing' added, whose value is returned by the function; the 'mise' component of the output is redefined; when computing the plug-in and bootstrap bandwidths of f and h, an if-else controlled by the value of the argument 'presmoothing' is added; in the final computation of 'p', if 'bw[1]' is 0 'p' is set to 'as.numeric(dfr$d)'; for estimating S and H with either a plug-in or bootstrap bandwidth, if presmoothing is FALSE the case is treated as 'bw.selec = "fixed"' and 'fixed.bw = 0', and a warning is printed; in the computation of 'C1', 'C2', 'D1', 'D2' and 'A', the multiplication by 'step.plugin' is done outside the call to 'simpson.c'(for the changes in 'simpson.c', see below).
+
+	* man/presmooth.Rd (usage, arguments, details): new argument 'presmoothing' added and its use is explained in the 'details' section;  typo corrected in details: the upper bound for the selected bandwidths is equal to the range of observed times.
+
+	2012/09/06 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+
+	* R/presmooth.R (presmooth): The NULL value of arguments 5, 6, 7 and, sometimes, 9 in the call to 'presmestim.c' is set to an arbitrary value of the type specified by the function declaration; also, in the call to 'isevect.c', the NULL for arguments 9 and 10 is substituted for 0. The warning 'passing an object of type NULL to .C is deprecated', appearing with versions >2.15.0, is thus avoided.
+
 Changes in version 1.1-2
 	
 	2011/10/17 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
@@ -17,11 +55,13 @@ Changes in version 1.1-1
 	2011/03/09 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
 	
 	* R/presmooth.R (control.presmooth): default value of 'k' is 1.
+
 	* man/control.presmooth.Rd (usage, arguments): default value of 'k' is 1.
 	
 	2011/02/04 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
 	
 	* R/presmooth.R (control.presmooth): new argument 'k' added.
+
 	* man/control.presmooth.Rd (usage, arguments): new argument 'k' added.
 	
 	2011/01/13 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
@@ -56,8 +96,11 @@ Changes in version 1.1-1
 	* R/presmooth.R (presmooth): definition of 'grid.bw' changed; the role of 'median(dfr$t)' is changed by 'range.t'.
 	
 	* man/control.presmooth.Rd: 'Rdversion' deleted.
+
 	* man/presmooth.Rd: 'Rdversion' deleted; '...' changed by \dots or \ldots.
+
 	* man/print.survPresmooth.Rd: 'Rdversion' deleted; ; '...' changed by \dots or \ldots.
+
 	* man/pscheck.Rd: 'Rdversion' deleted; '\docType{data}' added.
 	
 Changes in version 1.1-0
@@ -69,14 +112,15 @@ Changes in version 1.1-0
 	* src/isevect.c: new funtion replacing 'misevect.c'
         
 	* R/presmooth.R (control.presmooth): new argument 'trim' added.
-        * man/control.presmooth.Rd: new argument 'trim' added.
-	
-	* man/presmooth.Rd: 'bw.selec' was duplicated; the position of 'mise' and 'q.weight' was incorrect; 'trim' component added.
-	
+
 	* R/presmooth.R (presmooth): call to 'misevect' replaced with call to 'isevect' when computing the bootstrap bandwidths; the list returned includes component 'trim'; component 'mise' computed without dividing by 'n.boot'.
 	
 	* R/presmooth.R (print.survPresmooth): component 'trim' added to 'ext.names'.
+
+	* man/control.presmooth.Rd: new argument 'trim' added.
 	
+	* man/presmooth.Rd: 'bw.selec' was duplicated; the position of 'mise' and 'q.weight' was incorrect; 'trim' component added.
+		
 	2010/08/29 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
 	
 	* src/presmestim.c: changes for H made on 2010/08/28 applied to h.
@@ -86,11 +130,12 @@ Changes in version 1.1-0
 	* src/presmtwfast.c: same changes made to presmestim.c on 2010/08/28.
 	
 	* R/presmooth.R (control.presmooth): default value of 'n.boot' is c(5000, 1000).
+
+	* R/presmooth.R (presmooth): calls to presmtwfast.c include the value of the argument 'dup'; 'n.boot' redefined.
+
 	* man/control.presmooth.Rd (arguments): explanation about 'n.boot' changed.
 	
 	* man/print.survPresmooth.Rd (examples): not run.
-	
-	* R/presmooth.R (presmooth): calls to presmtwfast.c include the value of the argument 'dup'; 'n.boot' redefined.
 	
 	* man/presmooth.Rd (examples): search grid for the bandwidth for 'Hboot2' changed.
 	
@@ -124,14 +169,8 @@ Changes in version 1.1-0
 	
 	2010/07/01 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
 	
-	* R/presmooth.R (presmooth): when computing the pilots and plug-in bandwidths for S and H estimation, an if-else is added, implementing a procedure to use in case p is estimated as equal to 1; new variable 'ind.p1' defined and its value returned in the result; 'p', the Nadaraya-Watson estimate of p, renamed as 'p.nw'.
+	* R/presmooth.R (presmooth): when computing the pilot and plug-in bandwidths for S and H estimation, an if-else is added, implementing a procedure to use in case p is estimated as equal to 1; new variable 'ind.p1' defined and its value returned in the result; 'p', the Nadaraya-Watson estimate of p, renamed as 'p.nw'.
 	
 	2010/06/26 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
 	
 	* R/presmooth.R (presmooth): when computing the 2nd pilot for the plug-in bandwidth for f, 'if(estparplug[5] < 0.1)' replaced with 'if( estparplug[5] < 0.1 | estparplug[5] > 0.9)'; when computing the 3rd pilot for the plug-in bandwidth for f, 'if(estparplug2[5] < 0.1)' replaced with 'if( estparplug2[5] < 0.1 | estparplug2[5] > 0.9)'; when computing the 2nd pilot for the plug-¡n bandwidth for h, 'if(estparplug[5] < 0.1)' replaced with 'if( estparplug[5] < 0.1 | estparplug[5] > 0.9)'.
-
-
-
-
-
-
