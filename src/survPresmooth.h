@@ -34,9 +34,11 @@ void presmtwfast(double *x, int *nx, double *t, int *nt, double *bw, int *nkerne
 
 void presmdensfast(double *x, int *nx, double *t, int *nt, double *bw, int *nkernel, double *phat, double *pd);
 
+void presmdens2der(double *x, int *nx, double *t, int *nt, double *bw, int *nkernel, double *phat, double *pd);
+
 void nadarayawatson(double *x, int *nx, double *t, int *delta, int *nt, double *bw, int *nkernel, double *phat);
 
-void simpson(double *integrand, int *lintegrand, double *step, double *integral);
+void simpson(double *integrand, int *lintegrand, double *integral);
 
 void weightspresmkm(double *t, int *nt, double *phat, double *w);
 
