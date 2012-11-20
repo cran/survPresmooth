@@ -5,7 +5,7 @@
 }
 \usage{
 presmooth(times, status, dataset = NULL, estimand = c("S", "H", "f", "h"), 
-   bw.selec = c("plug-in", "bootstrap", "fixed"), presmoothing = TRUE, fixed.bw = 
+   bw.selec = c("fixed", "plug-in", "bootstrap"), presmoothing = TRUE, fixed.bw = 
    NULL, grid.bw.pil = NULL, grid.bw = NULL, kernel = c("biweight", "triweight"),
    bound = c("none", "left","right", "both"), x.est = NULL, control = 
    control.presmooth())
@@ -24,7 +24,7 @@ An optional data frame in which the variables named in \code{times} and \code{st
 An optional character string identifying the function to estimate: "S" for survival function, "H" for cumulative hazard function, "f" for density function and "h" for non-cumulative hazard function. Defaults to "S".
 	}
 	\item{bw.selec}{
-An optional (partially matched) character string specifying the method of bandwidth selection. "plug-in" for plug-in bandwidth selection, "bootstrap" for bootstrap bandwidth selection and "fixed" if no bandwidth selection is done, in which case the bandwidth(s) given by the \code{fixed.bw} argument is (are) used. Defaults to "plug-in".
+An optional (partially matched) character string specifying the method of bandwidth selection. "fixed" if no bandwidth selection is done, in which case the bandwidth(s) given by the \code{fixed.bw} argument is (are) used, "plug-in" for plug-in bandwidth selection and "bootstrap" for bootstrap bandwidth selection. Defaults to "fixed".
 	}
 	\item{presmoothing}{
 An optional logical value. If TRUE, the default, a presmoothed estimate is computed; if FALSE, the non-presmoothed counterpart (also including bandwidth selection) is computed.
@@ -33,10 +33,10 @@ An optional logical value. If TRUE, the default, a presmoothed estimate is compu
 An optional numeric vector with the fixed bandwidth(s) used when the value of the \code{bw.selec} argument is "fixed". It must be of length 1 for estimating survival and cumulative hazard functions, and of length 2 for density and hazard functions (in this case, the first element is the presmoothing bandwidth).
 	}
 	\item{grid.bw.pil}{
-An optional numeric vector specifying the grid where the presmoothing pilot bandwidth will be selected. Not used in plug-in bandwidth selection for survival or cumulative hazard function estimation. If NULL, it is internally computed.
+An optional numeric vector specifying the grid where the pilot bandwidth for the Nadaraya-Watson estimate of the conditional probability of uncensoring, p, will be selected. Not used in plug-in bandwidth selection for survival or cumulative hazard function estimation. If NULL, it is internally computed.
 	}
 	\item{grid.bw}{
-An optional list of length 1 (for survival or cumulative hazard function estimation) or 2 (for density or hazard function estimation) whose component(s) is (are) (a) numeric vector(s) specifying the grid of bandwidths needed for bootstrap bandwith selection when the value of the \code{bw.selec} argument is "bootstrap". Alternatively, for survival or cumulative hazard function estimation, it can also be a numeric vector. If NULL, it is internally computed.
+An optional list of length 1 (for presmoothed estimation of survival and cumulative hazard functions, and non-presmoothed estimation of density and hazard functions) or 2 (for presmoothed estimation of density and hazard functions) whose component(s) (is) are (a) numeric vector(s) specifying the grid of bandwidths needed for bootstrap bandwith selection when the value of the \code{bw.selec} argument is "bootstrap". If it is a list of length 1, it can also be inputted as a numeric vector. If NULL, it is internally computed.
 	}
 	\item{kernel}{
 A (partially matched) character string specifying the kernel function used. One of "biweight", for biweight kernel, and "triweight", for triweight kernel. Defaults to "biweight".
@@ -67,14 +67,8 @@ The value of the \code{bw.selec} argument.
 	\item{mise}{
 A vector or matrix with the values of the bootstrap MISE, returned for bootstrap bandwidth selection if the value of \code{control$save.mise} is TRUE.
 	}
-	\item{trim}{
-The percentage of trimming applied in the bootstrap MISE computation.
-	}
 	\item{grid.pil}{
 The vector of numeric values defining the grid used for searching the pilot bandwidth when plug-in or bootstrap bandwidth selection is done.
-	}
-	\item{problem.p1}{
-A character string reporting on the absence (problem.p1 = "no") or presence of numerical problems when computing the plug-in bandwidth in survival and cumulative hazard function estimation (in all other cases its value is NULL). Two type of problems are identified, both of them related to the estimation of the conditional probability of uncensoring, p. First, if p is estimated as constantly equal to 0 or 1, the presmoothing bandwidth is taken as two times the range of the observed times (problem.p1 = "p = 0/1"). Second, if the estimated p has a sudden change point, passing from constant values of 1 at one side to constant values of 0 at the other side, no presmoothing is carried out (problem.p1 = "overflow").
 	}
 	\item{pilot.bw}{
 The pilot bandwidth(s) used when plug-in or bootstrap bandwidth selection is done.
@@ -116,7 +110,7 @@ Jacome, M. A., Gijbels, I. and Cao, R. (2008) "Comparison of presmoothing method
 
 Mueller, H. G. and Wang, J. L. (1994) "Hazard rate estimation under random censoring with varying kernels and bandwidths", Biometrics, 50, 61-76. 
 }
-\author{Lopez-de-Ullibarri, I. and Jacome, M. A.}
+\author{Lopez de Ullibarri, I. and Jacome, M. A.}
 \seealso{\code{\link{control.presmooth}}}
 \examples{
 	\dontrun{
@@ -138,16 +132,16 @@ Hboot1 <- presmooth(t, delta, pscheck, estimand = "H", bw.selec = "bootstrap")
 set.seed(1)
 
 Hboot2 <- presmooth(t, delta, pscheck, estimand = "H", bw.selec = "bootstrap", x.est = 
-   seq(0, 1, by = 0.02), grid.bw = seq(0.55, 0.65, by = 0.005), control = 
+   seq(0, 1, by = 0.02), grid.bw = seq(0.55, 0.7, by = 0.01), control = 
    control.presmooth(save.mise = TRUE))
 
 # A plot of the MISE, showing the bootstrap bandwidth
 
 with(Hboot2,{
-   plot(grid.bw$grid.bw.1, mise, xlab = "Bandwidth", ylab = "MISE", main = 
+   plot(grid.bw$grid.bw, mise, xlab = "Bandwidth", ylab = "MISE", main = 
       expression(paste("Bootstrap bandwidth, ", b[boot])), type = "l")
-   points(bandwidth, mise[grid.bw$grid.bw.1 == bandwidth], pch = 46, cex = 5)
-   segments(bandwidth, 0, bandwidth, mise[grid.bw$grid.bw.1 == bandwidth], lty = "dotted")
+   points(bandwidth, mise[grid.bw$grid.bw == bandwidth], pch = 46, cex = 5)
+   segments(bandwidth, 0, bandwidth, mise[grid.bw$grid.bw == bandwidth], lty = "dotted")
    text(bandwidth, min(mise), bquote(paste("  ", b[boot] == .(bandwidth))), adj = c(0, 0))
 })
 
@@ -165,6 +159,10 @@ curve(x^3, add = TRUE, col = "grey", lty = "dotted")
 
 legend("topleft", legend = c("Presmoothed Nelson-Aalen", "Nelson-Aalen", "True"), col =
    c("black", "red", "grey"), lty = c("solid", "solid", "dotted"))
+
+# An alternative way of obtaining the Nelson-Aalen estimate
+
+Hna <- presmooth(t, delta, pscheck, "H", presmoothing = FALSE)
 
 ## Hazard function (hf) estimation 
 
@@ -186,8 +184,8 @@ plot(hpi1$x.est, hpi1$estimate, xlab = "t", ylab = "Hazard", ylim = c(0,
 
 lines(hpi2$x.est, hpi2$estimate, col = 2)
 
-legend("bottomright", legend = c("none", "right"), title = "Boundary correction", col = 1:2,
-   lty = 1)
+legend("bottomright", legend = c("none", "right"), title = "Boundary effect correction",
+   col = 1:2, lty = 1)
 
 # Estimation of hf using a bootstrap bandwidth. The values chosen for the grid.bw argument
 # are based on the result of preliminary trials (Warning: it may take a while ...)
@@ -249,4 +247,3 @@ legend("bottomright", legend = c("Plug-in bandwidth", "Bootstrap bandwidth", "Tr
    col = c("blue", "red", "black"), lty = c(2, 4, 1))
 	}
 }
-
