@@ -15,4 +15,4 @@ The data frame contains 2 variables:
 		}
 	}
 }
-\author{Lopez-de-Ullibarri, I. and Jacome, M. A.}
+\author{Lopez de Ullibarri, I. and Jacome, M. A.}

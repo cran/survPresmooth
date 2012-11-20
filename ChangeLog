@@ -1,10 +1,50 @@
+Changes in version 1.1-4
+
+	2012/11/20 Ignacio Lopez-de-Ullibarri <ilu@udc.es>	
+
+	* R/presmooth.R (control.presmooth): the 'trim' argument has been deleted.
+
+	* R/presmooth.R (presmooth):  in the calls to 'isevect.c', the 'ise' component now is defined as either 'numeric(if(forh) le.bw.1*le.bw.2 else le.bw.1)' (with 'presmoothing= TRUE') or 'numeric(le.bw.1)'  (with 'presmoothing = FALSE'); the previous result, after being divided by 'n.boot', is saved in 'mise'; 'trim' component deleted from the returned list; the 'ise.array' object has been deleted.
+
+	* R/presmooth.R (print.survPresmooth): the 'trim' component has been deleted.
+
+	* man/control.presmooth.Rd (usage, arguments, value): the 'trim' argument and all the references to it have been deleted.
+
+	* man/presmooth.Rd (value, examples): the 'trim' item has been deleted; an example has been corrected and slightly changed; a new example has been added.
+
+	* man/print.survPresmooth.Rd (arguments): "trim" deleted from the text in the 'more' argument.
+
+	* src/isevect.c: 'isev' now accumulates the sum of all the '*isecomp' (previously, all the values were saved).
+
+	2012/11/07 Ignacio Lopez-de-Ullibarri <ilu@udc.es>	
+
+	* R/presmooth.R (presmooth): 'bw.selec' is now 'c("fixed", "plugin", "bootstrap")' instead of 'c("plugin", "bootstrap", "fixed")'; the previous change also induces changes in the management of 'n.bw.selec' (key for the conversion oldvalue -> new value: 1 -> 2, 2 -> 3, 3 -> 1); when 'presmoothing == FALSE' and 'n.estimand %in% 1:2', 'fixed.bw' is set to 0.
+
+	* man/presmooth.Rd (usage, arguments): Changes in 'bw.selec' (see above).
+
+	2012/11/02 Ignacio Lopez-de-Ullibarri <ilu@udc.es>	
+
+	* DESCRIPTION: typing of the name of the first author and maintainer changed to 'Lopez de Ullibarri' (without hyphens).
+
+	* R/presmooth.R (presmooth): due to a programming error, 'pilot.bw1' was not computed when 'bw.selec = "bootstrap"' and 'presmoothing = FALSE': the condition '((n.bw.selec == 1) & forh) | (n.bw.selec == 2 & presmoothing)' is replaced with '((n.bw.selec == 1) & forh) | (n.bw.selec == 2)'; the correction of the inputted values of 'grid.bw' and 'grid.bw.pil' are checked; in bootstrap bandwidth selection the computation of 'grid.bw.1' and 'grid.bw.2' when 'presmoothing = FALSE' is changed, and the arguments 'grid.bw.2' and 'le.bw.2' in the call to 'isevect' are replaced by 'grid.bw.1' and 'le.bw.1', resp.; the computation of'ise.array' is modified; for the bootstrap bandwidth, when computing 'bw' for f or h and 'presmoothing=FALSE', 'grid.bw.2' is replaced with 'grid.bw.1'; in 'ps', the component 'problem.pi' has been deleted from 'ps', and the components 'grid.pil' and 'grid.bw' have been modified; a logical variable, 'allcens', added for controlling the warnings printed when all data are censored. 
+
+	* R/presmooth.R (print.survPresmooth): 'problem.pi' removed from the 'comps' vector.
+
+	* man/control.presmooth.Rd (author): typing of the name of the first author changed to 'Lopez de Ullibarri'.
+
+	* man/presmooth.Rd (arguments, value, author): the description of the 'grid.bw.pil' and 'grid.bw' arguments have been rewritten; the 'problem.pi' component of the output has been deleted; typing of the name of the first author changed to 'Lopez de Ullibarri'.
+
+	* man/print.survPresmooth.Rd (arguments, author): 'call' and 'bw.selec' removed from the set of valid names for the 'more' argument; typing of the name of the first author changed to 'Lopez de Ullibarri'.
+
+	* man/pscheck.Rd (author): typing of the name of the first author changed to 'Lopez de Ullibarri'.
+
 Changes in version 1.1-3
 
 	2012/10/15 Ignacio Lopez-de-Ullibarri <ilu@udc.es>	
 
 	* R/presmooth.R (control.presmooth): the 'k' argument has been removed.
 
-	* R/presmooth.R (print.survPresmooth): the call is printed by default; new argument 'long' added. The printed text now distinguishes between presmoothed and non-presmoothed estimates; for f or h estimation, the value of 'bound' is printed; components 'call', 'bw.selec', 'bandwidth', 'x.est', 'estimand' removed from 'ext.names'; the components printed by default cannot be printed twice; some other little modifications and minor bugs corrected.
+	* R/presmooth.R (print.survPresmooth): the call is printed by default; new argument 'long' added; the printed text now distinguishes between presmoothed and non-presmoothed estimates; for f or h estimation, the value of 'bound' is printed; components 'call', 'bw.selec', 'bandwidth', 'x.est', 'estimand' removed from 'ext.names'; the components printed by default cannot be printed twice; some other little modifications and minor bugs corrected.
 
 	* R/presmooth.R (presmooth): 'k' (more precisely, 'control$k') has been removed; in the computation of 'bw' for the plug-in bandwidth of h, 'pilot.bw[-3]' is replaced with 'pilot.bw' in the call to 'constrOptim'; when computing the bootstrap bandwidth for f and h, an if-else is added in the computations for the 2nd pilot: the else arm gives Muller pilot as an alternative when all data are censored within the interval taken; the program stops if 'bw.selec' does not (partially) match with one of 'plug-in', 'bootstrap' or 'fixed'; when partial matching is present, the correct values of 'kernel', 'bound' and 'bw.selec' are calculated; now the value of 'bound' is also returned.
 
