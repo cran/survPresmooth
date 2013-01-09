@@ -1,10 +1,10 @@
-4d3a4d53c76c7b43b2a689a6e508af0e *ChangeLog
-a1b788a374a18a80a8490e29e1c7c7f8 *DESCRIPTION
+5e534bfc9c670777ed659c82c81c9683 *ChangeLog
+2405f30014fc85cdb6bd1e5c4a489977 *DESCRIPTION
 f95f1230e411e28c6ed15cd20992291b *NAMESPACE
 d89d613fe6a3fb5f822a3ae81a084ec5 *R/presmooth.R
-adee1209e07594104ede36de4ab536d5 *R/zzz.R
+e60db0c5d53dae358bcc9be13ec33840 *R/zzz.R
 7d68289b265e2591b24febbbf08e1d8e *data/pscheck.rda
-22e14b5457a2b45bc3a7ce27cb3b8294 *man/control.presmooth.Rd
+f6a0d5a8ba000d0d39aef955172ff696 *man/control.presmooth.Rd
 380200d05008e195957e379440c81015 *man/presmooth.Rd
 7f5d7ef4e1df9fbceb6c7da7204012b4 *man/print.survPresmooth.Rd
 289ce93a8e0a969d7fd5ac6fbed845d9 *man/pscheck.Rd

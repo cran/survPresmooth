@@ -1,6 +1,14 @@
 Changes in version 1.1-4
 
-	2012/11/20 Ignacio Lopez-de-Ullibarri <ilu@udc.es>	
+	2013/01/09 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+
+	* R/zzz.R (.Last.lib): the function has been deleted and substituted by .onUnload().
+
+	* R/zzz.R (.First.lib): the function has been deleted.
+
+	* man/control.presmooth.Rd (arguments): in 'length.grid.ise', Simpson's rule is used instead of trapezium's rule.
+
+	2012/11/20 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
 
 	* R/presmooth.R (control.presmooth): the 'trim' argument has been deleted.
 
@@ -16,17 +24,17 @@ Changes in version 1.1-4
 
 	* src/isevect.c: 'isev' now accumulates the sum of all the '*isecomp' (previously, all the values were saved).
 
-	2012/11/07 Ignacio Lopez-de-Ullibarri <ilu@udc.es>	
+	2012/11/07 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
 
 	* R/presmooth.R (presmooth): 'bw.selec' is now 'c("fixed", "plugin", "bootstrap")' instead of 'c("plugin", "bootstrap", "fixed")'; the previous change also induces changes in the management of 'n.bw.selec' (key for the conversion oldvalue -> new value: 1 -> 2, 2 -> 3, 3 -> 1); when 'presmoothing == FALSE' and 'n.estimand %in% 1:2', 'fixed.bw' is set to 0.
 
 	* man/presmooth.Rd (usage, arguments): Changes in 'bw.selec' (see above).
 
-	2012/11/02 Ignacio Lopez-de-Ullibarri <ilu@udc.es>	
+	2012/11/02 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
 
 	* DESCRIPTION: typing of the name of the first author and maintainer changed to 'Lopez de Ullibarri' (without hyphens).
 
-	* R/presmooth.R (presmooth): due to a programming error, 'pilot.bw1' was not computed when 'bw.selec = "bootstrap"' and 'presmoothing = FALSE': the condition '((n.bw.selec == 1) & forh) | (n.bw.selec == 2 & presmoothing)' is replaced with '((n.bw.selec == 1) & forh) | (n.bw.selec == 2)'; the correction of the inputted values of 'grid.bw' and 'grid.bw.pil' are checked; in bootstrap bandwidth selection the computation of 'grid.bw.1' and 'grid.bw.2' when 'presmoothing = FALSE' is changed, and the arguments 'grid.bw.2' and 'le.bw.2' in the call to 'isevect' are replaced by 'grid.bw.1' and 'le.bw.1', resp.; the computation of'ise.array' is modified; for the bootstrap bandwidth, when computing 'bw' for f or h and 'presmoothing=FALSE', 'grid.bw.2' is replaced with 'grid.bw.1'; in 'ps', the component 'problem.pi' has been deleted from 'ps', and the components 'grid.pil' and 'grid.bw' have been modified; a logical variable, 'allcens', added for controlling the warnings printed when all data are censored. 
+	* R/presmooth.R (presmooth): due to a programming error, 'pilot.bw1' was not computed when 'bw.selec = "bootstrap"' and 'presmoothing = FALSE': the condition '((n.bw.selec == 1) & forh) | (n.bw.selec == 2 & presmoothing)' is replaced with '((n.bw.selec == 1) & forh) | (n.bw.selec == 2)'; the correction of the inputted values of 'grid.bw' and 'grid.bw.pil' are checked; in bootstrap bandwidth selection the computation of 'grid.bw.1' and 'grid.bw.2' when 'presmoothing = FALSE' is changed, and the arguments 'grid.bw.2' and 'le.bw.2' in the call to 'isevect' are replaced by 'grid.bw.1' and 'le.bw.1', resp.; the computation of'ise.array' is modified; for the bootstrap bandwidth, when computing 'bw' for f or h and 'presmoothing=FALSE', 'grid.bw.2' is replaced with 'grid.bw.1'; in 'ps', the component 'problem.pi' has been deleted from 'ps', and the components 'grid.pil' and 'grid.bw' have been modified; a logical variable, 'allcens', added for controlling the warnings printed when all data are censored.
 
 	* R/presmooth.R (print.survPresmooth): 'problem.pi' removed from the 'comps' vector.
 
@@ -40,7 +48,7 @@ Changes in version 1.1-4
 
 Changes in version 1.1-3
 
-	2012/10/15 Ignacio Lopez-de-Ullibarri <ilu@udc.es>	
+	2012/10/15 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
 
 	* R/presmooth.R (control.presmooth): the 'k' argument has been removed.
 
@@ -54,13 +62,13 @@ Changes in version 1.1-3
 
 	* man/presmooth.Rd (usage, examples): corrected a bug repeated several times in the examples ('seq' instead of 'by' as an argument to seq); 'grid.bw' changed when computing the 'hboot' object; '\ldots' replaced with '...'; the 'dboot2' object is not computed; the last plot is redone; some retyping for improving the PDF manual.
 
-	2012/10/09 Ignacio Lopez-de-Ullibarri <ilu@udc.es>	
+	2012/10/09 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
 
 	* R/presmooth.R (presmooth): when computing the plug-in bandwidth for S or H, if 'Q' and 'A' are 0 'bw' is set to 0; when all the times are censored a warning is printed and NA returned for both the selected bandwidth and the estimate; the maximum value for all the pilots is set to control$k*range.t; the definition of 'grid.bw.pil' is changed; since 'grid.bw.pil' is not needed for bootstrap bandwidth selection when 'presmoothing' is FALSE, the new condition for computing or returning this grid is 'if(((n.bw.selec == 1) & forh) | (n.bw.selec == 2 & presmoothing))'.
 
 	* man/control.presmooth.Rd (arguments, details): the length of 'pilot.par.ini' is 8 instead 6 and an explanation of the meaning of each component is included.
 
-	2012/10/07 Ignacio Lopez-de-Ullibarri <ilu@udc.es>	
+	2012/10/07 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
 
 	* src/termsmisenopresmooth.c: new function similar to 'termsmise.c' for the case without presmoothing.
 
@@ -77,64 +85,64 @@ Changes in version 1.1-3
 	* R/presmooth.R (presmooth): The NULL value of arguments 5, 6, 7 and, sometimes, 9 in the call to 'presmestim.c' is set to an arbitrary value of the type specified by the function declaration; also, in the call to 'isevect.c', the NULL for arguments 9 and 10 is substituted for 0. The warning 'passing an object of type NULL to .C is deprecated', appearing with versions >2.15.0, is thus avoided.
 
 Changes in version 1.1-2
-	
+
 	2011/10/17 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
 
 	* ChangeLog: file added.
-	
+
 	* DESCRIPTION: 'LazyLoad: no' deleted; 'LazyData: yes' added.
-	
+
 	* NAMESPACE: file added.
-	
+
 	* man/presmooth.Rd (examples): 'data(pscheck)' deleted.
-	
+
 	* man/print.survPresmooth.Rd (examples): 'data(pscheck)' deleted.
-	
+
 Changes in version 1.1-1
-	
+
 	2011/03/09 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
-	
+
 	* R/presmooth.R (control.presmooth): default value of 'k' is 1.
 
 	* man/control.presmooth.Rd (usage, arguments): default value of 'k' is 1.
-	
+
 	2011/02/04 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
-	
+
 	* R/presmooth.R (control.presmooth): new argument 'k' added.
 
 	* man/control.presmooth.Rd (usage, arguments): new argument 'k' added.
-	
+
 	2011/01/13 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
-	
+
 	* src/isevect.c: R_FlushConsole(); R_ProcessEvents() added in each of the main loops for S, H, f and h.
-	
+
 	* man/control.presmooth.Rd (details): the recommended 'nboot' is 10000.
-	
+
 	* man/presmooth.Rd (arguments): the explanation about 'bound' is changed.
 	(details): the upper bound for the selected bandwidth and the meaning of 'q.weight' are explained.
-	
+
 	2011/01/07 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
-	
+
 	* R/presmooth.R (presmooth): for the bootstrap bandwidth, the 2nd pilot for h is computed with the same formula as for f.
-	
+
 	2011/01/04 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
-	
+
 	* DESCRIPTION: description changed.
-	
+
 	* man/survPresmooth-package.Rd: file deleted.
-	
+
 	* man/presmooth.Rd (value): heading changed.
-	
+
 	2011/01/02 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
-	
+
 	* R/presmooth.R (print.survPresmooth): some minor modifications.
-	
+
 	2010/12/28 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
-	
+
 	* DESCRIPTION: LazyLoad: no.
-	
+
 	* R/presmooth.R (presmooth): definition of 'grid.bw' changed; the role of 'median(dfr$t)' is changed by 'range.t'.
-	
+
 	* man/control.presmooth.Rd: 'Rdversion' deleted.
 
 	* man/presmooth.Rd: 'Rdversion' deleted; '...' changed by \dots or \ldots.
@@ -142,75 +150,75 @@ Changes in version 1.1-1
 	* man/print.survPresmooth.Rd: 'Rdversion' deleted; ; '...' changed by \dots or \ldots.
 
 	* man/pscheck.Rd: 'Rdversion' deleted; '\docType{data}' added.
-	
+
 Changes in version 1.1-0
-	
+
 	2010/09/17 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
-	
+
 	* src/misevect.c: deleted.
-	
+
 	* src/isevect.c: new funtion replacing 'misevect.c'
-        
+
 	* R/presmooth.R (control.presmooth): new argument 'trim' added.
 
 	* R/presmooth.R (presmooth): call to 'misevect' replaced with call to 'isevect' when computing the bootstrap bandwidths; the list returned includes component 'trim'; component 'mise' computed without dividing by 'n.boot'.
-	
+
 	* R/presmooth.R (print.survPresmooth): component 'trim' added to 'ext.names'.
 
 	* man/control.presmooth.Rd: new argument 'trim' added.
-	
+
 	* man/presmooth.Rd: 'bw.selec' was duplicated; the position of 'mise' and 'q.weight' was incorrect; 'trim' component added.
-		
+
 	2010/08/29 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
-	
+
 	* src/presmestim.c: changes for H made on 2010/08/28 applied to h.
-	
+
 	* src/misevect.c: for h, the value of 'dup' is passed to the argument 'dup' of presmtwfast.c.
-	
+
 	* src/presmtwfast.c: same changes made to presmestim.c on 2010/08/28.
-	
+
 	* R/presmooth.R (control.presmooth): default value of 'n.boot' is c(5000, 1000).
 
 	* R/presmooth.R (presmooth): calls to presmtwfast.c include the value of the argument 'dup'; 'n.boot' redefined.
 
 	* man/control.presmooth.Rd (arguments): explanation about 'n.boot' changed.
-	
+
 	* man/print.survPresmooth.Rd (examples): not run.
-	
+
 	* man/presmooth.Rd (examples): search grid for the bandwidth for 'Hboot2' changed.
-	
+
 	2010/08/28 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
-	
+
 	* src/presmestim.c: new argument 'dup' added; new variable 'counter' defined; if-else added in the computation of H:.
-	
+
 	* src/termsmise.c: in the call to presmestim.c, a 'dummy', pnull, is passed as the value for 'dup'.
-	
+
 	* src/misevect.c: new argument 'dup' added; in the calls to presmestim.c, a 'dummy', pnull, (for S) or dup (for H) is passed as the value for 'dup'.
-	
+
 	* R/presmooth.R (presmooth): 'dup' defined; calls to presmestim.c include 'dup'.
-	
+
 	* man/presmooth.Rd (examples): error in the definition of hpi2 corrected.
-	
+
 	2010/07/18 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
-	
+
 	* data/pscheck.rda: format changed to 'rda'.
-	
+
 	2010/07/11 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
-	
+
 	* R/presmooth.R (presmooth): the if-else added on 2010/07/07 is slightly modified; the procedure implemented on 2010/07/01 for detecting p=1 is extended to deal with the case p=0; the warning message and the value of 'problem' are changed.
-	
+
 	2010/07/07 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
-	
+
 	* R/presmooth.R (presmooth): 'problem' defined and its value returned in the result; 'coef.logis' defined; 'ind.p1' deleted; if-else added implementing a procedure for detecting overflow when computing C1; the 'lower' argument of integrate() when computing 'C1integrand1' and 'C1integrand2' is changed.
-	
+
 	2010/07/06 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
-	
+
 	* R/presmooth.R (presmooth): when computing the 2nd pilot for the bootstrap bandwidth for f and h, 'if(estparboot[5] < 0.1)' replaced with 'if( estparboot[5] < 0.1 | estparboot[5] > 0.9)'; when computing the bootstrap bandwidth, 'pos.min.mise <- which(mise == min.mise)' replaced with 'pos.min.mise <- max(which(mise == min.mise))'.
-	
+
 	2010/07/01 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
-	
+
 	* R/presmooth.R (presmooth): when computing the pilot and plug-in bandwidths for S and H estimation, an if-else is added, implementing a procedure to use in case p is estimated as equal to 1; new variable 'ind.p1' defined and its value returned in the result; 'p', the Nadaraya-Watson estimate of p, renamed as 'p.nw'.
-	
+
 	2010/06/26 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
-	
+
 	* R/presmooth.R (presmooth): when computing the 2nd pilot for the plug-in bandwidth for f, 'if(estparplug[5] < 0.1)' replaced with 'if( estparplug[5] < 0.1 | estparplug[5] > 0.9)'; when computing the 3rd pilot for the plug-in bandwidth for f, 'if(estparplug2[5] < 0.1)' replaced with 'if( estparplug2[5] < 0.1 | estparplug2[5] > 0.9)'; when computing the 2nd pilot for the plug-¡n bandwidth for h, 'if(estparplug[5] < 0.1)' replaced with 'if( estparplug[5] < 0.1 | estparplug[5] > 0.9)'.
