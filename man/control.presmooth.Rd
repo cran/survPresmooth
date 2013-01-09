@@ -17,7 +17,7 @@ A numeric vector of length 2 specifying the order of quantiles of the observed t
 An integer specifying the number of points of the grid used for numerical integration (Simpson's rule) of integrals involved in plug-in bandwidth selection. The default is 100.
 	}
 	\item{length.grid.ise}{
-An integer specifying the number of points of the grid used for computing integrated squared error by numerical integration (trapezium rule) in bootstrap bandwidth selection. The default is 100.
+An integer specifying the number of points of the grid used for computing integrated squared error by numerical integration (Simpson's rule) in bootstrap bandwidth selection. The default is 100.
 	}
 	\item{pilot.par.ini}{
 A numeric vector of length 8 specifying the initial values of optimization routines used for pilot bandwidth computation in plug-in and bootstrap bandwidth selection (although, in the last case, it is not needed for survival and cumulative hazard function estimation). If NULL, the default, values are internally computed.
