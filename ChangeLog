@@ -1,4 +1,10 @@
-Changes in version 1.1-4
+Changes in version 1.1-6
+
+	2013/03/11  Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+
+	* ChangeLog: the item 'Changes in version 1.1-5' was missing; by error these changes, done on 2013/01/09, were placed under the item 'Changes in version 1.1-4'
+
+Changes in version 1.1-5
 
 	2013/01/09 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
 
@@ -7,6 +13,8 @@ Changes in version 1.1-4
 	* R/zzz.R (.First.lib): the function has been deleted.
 
 	* man/control.presmooth.Rd (arguments): in 'length.grid.ise', Simpson's rule is used instead of trapezium's rule.
+
+Changes in version 1.1-4
 
 	2012/11/20 Ignacio Lopez-de-Ullibarri <ilu@udc.es>
 
