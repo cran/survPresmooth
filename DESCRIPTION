@@ -1,8 +1,8 @@
 Package: survPresmooth
 Type: Package
 Title: Presmoothed Estimation in Survival Analysis
-Version: 1.1-5
-Date: 2013-01-09
+Version: 1.1-6
+Date: 2013-03-11
 Author: Ignacio Lopez de Ullibarri and Maria Amalia Jacome
 Maintainer: Ignacio Lopez de Ullibarri <ilu@udc.es>
 Depends: R(>= 2.15.2)
@@ -11,6 +11,7 @@ Description: Presmoothed estimators of survival, density, cumulative
         survival data
 License: GPL-2
 LazyData: yes
-Packaged: 2013-01-09 09:52:34 UTC; ilu
+Packaged: 2013-03-11 18:14:03 UTC; ilu
+NeedsCompilation: yes
 Repository: CRAN
-Date/Publication: 2013-01-09 12:10:43
+Date/Publication: 2013-03-12 09:53:42
