@@ -1,3 +1,4 @@
-.onUnload <- function (libpath){
-  library.dynam.unload("survPresmooth", libpath) 
-}
+.onUnload <-
+    function (libpath){
+        library.dynam.unload("survPresmooth", libpath) 
+    }

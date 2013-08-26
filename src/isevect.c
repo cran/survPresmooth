@@ -116,49 +116,47 @@ void isevect(double *t, int *delta, int *n, int *nboot, double *gridise, int *le
     }
     free(deltaboot);
   }
-  else{
-    if(*presmoothing == 0){ // without presmoothing
-      deltabootdbl = malloc(*n * sizeof(double));
-      if(*nestimand == 3){
+  else{ // without presmoothing
+    deltabootdbl = malloc(*n * sizeof(double));
+    if(*nestimand == 3){
 // f
-	for (boot = 0; boot < *nboot; boot++){
-	  R_FlushConsole();
-	  R_ProcessEvents();
-	  for (i = 0; i < *n; i++)
-	    indices[i] = (int)ftrunc(runif(0, 1) * (*n));
-	  R_isort(indices, *n);
-	  for (i = 0; i < *n; i++){
-	    tboot[i] = t[indices[i]];
-	    deltabootdbl[i] = (double)delta[indices[i]];
-	  }
-	  for (i = 0; i < *legridbw2; i++){
-	    presmdensfast(gridise, legridise, tboot, n, &(gridbw2[i]), nkernel, deltabootdbl, estimboot);
-	    for (j = 0; j < *legridise; j++)
-	      integrand[j] = (estimboot[j] - estim[j])*(estimboot[j] - estim[j]);
-	    simpson(integrand, legridise, isecomp);
-	    isev[i] += *isecomp;
-	  }
+      for (boot = 0; boot < *nboot; boot++){
+	R_FlushConsole();
+	R_ProcessEvents();
+	for (i = 0; i < *n; i++)
+	  indices[i] = (int)ftrunc(runif(0, 1) * (*n));
+	R_isort(indices, *n);
+	for (i = 0; i < *n; i++){
+	  tboot[i] = t[indices[i]];
+	  deltabootdbl[i] = (double)delta[indices[i]];
+	}
+	for (i = 0; i < *legridbw2; i++){
+	  presmdensfast(gridise, legridise, tboot, n, &(gridbw2[i]), nkernel, deltabootdbl, estimboot);
+	  for (j = 0; j < *legridise; j++)
+	    integrand[j] = (estimboot[j] - estim[j])*(estimboot[j] - estim[j]);
+	  simpson(integrand, legridise, isecomp);
+	  isev[i] += *isecomp;
 	}
       }
-      else{
+    }
+    else{
 // h
-	for (boot = 0; boot < *nboot; boot++){
-	  R_FlushConsole();
-	  R_ProcessEvents();
-	  for (i = 0; i < *n; i++)
-	    indices[i] = (int)ftrunc(runif(0, 1) * (*n));
-	  R_isort(indices, *n);
-	  for (i = 0; i < *n; i++){
-	    tboot[i] = t[indices[i]];
-	    deltabootdbl[i] = (double)delta[indices[i]];
-	  }
-	  for (i = 0; i < *legridbw2; i++){
-	    presmtwfast(gridise, legridise, tboot, n, &(gridbw2[i]), nkernel, dup, deltabootdbl, estimboot);
-	    for (j = 0; j < *legridise; j++)
-	      integrand[j] = (estimboot[j] - estim[j])*(estimboot[j] - estim[j]);
-	    simpson(integrand, legridise, isecomp);
-	    isev[i] += *isecomp;
-	  }
+      for (boot = 0; boot < *nboot; boot++){
+	R_FlushConsole();
+	R_ProcessEvents();
+	for (i = 0; i < *n; i++)
+	  indices[i] = (int)ftrunc(runif(0, 1) * (*n));
+	R_isort(indices, *n);
+	for (i = 0; i < *n; i++){
+	  tboot[i] = t[indices[i]];
+	  deltabootdbl[i] = (double)delta[indices[i]];
+	}
+	for (i = 0; i < *legridbw2; i++){
+	  presmtwfast(gridise, legridise, tboot, n, &(gridbw2[i]), nkernel, dup, deltabootdbl, estimboot);
+	  for (j = 0; j < *legridise; j++)
+	    integrand[j] = (estimboot[j] - estim[j])*(estimboot[j] - estim[j]);
+	  simpson(integrand, legridise, isecomp);
+	  isev[i] += *isecomp;
 	}
       }
     }
@@ -172,4 +170,3 @@ void isevect(double *t, int *delta, int *n, int *nboot, double *gridise, int *le
   free(integrand);
   free(isecomp);
 }
-

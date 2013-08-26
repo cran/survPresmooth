@@ -194,8 +194,9 @@ set.seed(1)
 
 hboot <- presmooth(t, delta, pscheck, estimand = "h", bw.selec = "bootstrap", bound = "right",
    x.est = seq(0, max(pscheck$t), by = 0.02), grid.bw.pil = seq(range(pscheck$t)[1],
-   range(pscheck)[2], by = 0.01), grid.bw = list(seq(0.4, 0.8, by = 0.05), seq(0.6, 0.9, by = 0.005)),
-   control = control.presmooth(q.weight = c(0.25, 0.75), save.mise = TRUE))
+   range(pscheck)[2], by = 0.01), grid.bw = list(seq(0.4, 0.8, by = 0.05), 
+   seq(0.6, 0.9, by = 0.005)), control = control.presmooth(q.weight = c(0.25, 0.75),
+   save.mise = TRUE))
 
 # A plot of the bootstrap MISE, showing the bootstrap bandwidth
 

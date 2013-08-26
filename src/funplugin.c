@@ -23,6 +23,7 @@ double auxfunplugin(double x, int nkernel){
     else return 350.0/429.0/x - 35.0/99.0/pow(x, 3) + 175.0/891.0/pow(x, 5) - 175.0/1287.0/pow(x, 7) + 70.0/969.0/pow(x, 8) - 175.0/22287.0/pow(x, 10) + 35.0/43263.0/pow(x, 12) - 35.0/799227.0/pow(x, 14);
     break;
   default:
+    return 0;
     break;
   }
 }
