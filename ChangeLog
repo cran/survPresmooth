@@ -1,3 +1,14 @@
+Changes in version 1.1-7
+	2013/08/26  Ignacio Lopez-de-Ullibarri <ilu@udc.es>
+
+	* R/presmooth.R (presmooth): in line 56 'presmoothing == FALSE' replaced with '!presmoothing'; new check: when 'bw.selec' is "fixed", 'presmoothing' is FALSE and 'estimand' is "f" or "h", the presmoothing bandwidth ('fixed.bw[1]') is forced to be 0 or an error is produced if 'fixed.bw' is NULL or his length is not 2; new if-else added in plug-in bandwidth computation for S and H: when p=0 the bandwidth is set to 0, when p=1, the bandwidth is set to the maximum possible value; the same thing is done when p.nw=0 or p.nw=1; the text of the warnings is modified accordingly.
+
+	* src/funplugin.c: in the auxfunplugin function, the default of the switch now includes the statement 'return 0' (to avoid warnings with clang).
+
+	* src/isevect.c: 'if(*presmoothing == 0)' condition deleted (it is always TRUE).
+
+	* src/kernelder.c: the default of every switch now includes a 'return 0' statement (to avoid warnings with clang).
+
 Changes in version 1.1-6
 
 	2013/03/11  Ignacio Lopez-de-Ullibarri <ilu@udc.es>

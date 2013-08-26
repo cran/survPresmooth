@@ -2,8 +2,8 @@
 \alias{control.presmooth}
 \title{Control Values for the presmooth() Function}
 \description{This function returns a list of values for control parameters of the \code{presmooth} function.}
-\usage{control.presmooth(n.boot = c(5000, 1000), q.weight = c(0.2, 0.8), 
-   length.grid.bw.plugin = 100, length.grid.ise = 100, pilot.par.ini= NULL,
+\usage{control.presmooth(n.boot = c(5000, 1000), q.weight = c(0.2, 0.8),
+   length.grid.bw.plugin = 100, length.grid.ise = 100, pilot.par.ini = NULL,
    save.data = FALSE, save.mise = FALSE, na.action = na.omit)
 }
 \arguments{
