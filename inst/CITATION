@@ -1,0 +1,20 @@
+citHeader("To cite survPresmooth in publications use:")
+
+citEntry(entry = "Article",
+  title        = "{survPresmooth}: An {R} Package for Presmoothed Estimation in Survival Analysis",
+  author       = personList(as.person("Ignacio {L{\\'o}pez-de-Ullibarri}"),
+                   as.person("M. Amalia J{\\'a}come")),
+  journal      = "Journal of Statistical Software",
+  year         = "2013",
+  volume       = "54",
+  number       = "11",
+  pages        = "1--26",
+  url          = "http://www.jstatsoft.org/v54/i11/",
+
+  textVersion  =
+  paste("Ignacio Lopez-de-Ullibarri, M. Amalia Jacome (2013).",
+        "survPresmooth: An R Package for Presmoothed Estimation in Survival Analysis.",
+        "Journal of Statistical Software, 54(11), 1-26.",
+        "URL http://www.jstatsoft.org/v54/i11/.")
+)
+

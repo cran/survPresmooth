@@ -108,6 +108,10 @@ Gonzalez-Manteiga, W., Cao R. and Marron J. S. (1996) "Bootstrap selection of th
 
 Jacome, M. A., Gijbels, I. and Cao, R. (2008) "Comparison of presmoothing methods in kernel density estimation under censoring", Computational Statistics, 23, 381-406.
 
+Lopez-de-Ullibarri, I and Jacome, M. A. (2013). "survPresmooth: An R Package for Presmoothed Estimation in Survival Analysis", Journal of Statistical Software, 54(11), 1-26. URL:
+
+   http://www.jstatsoft.org/v54/i11/.
+
 Mueller, H. G. and Wang, J. L. (1994) "Hazard rate estimation under random censoring with varying kernels and bandwidths", Biometrics, 50, 61-76. 
 }
 \author{Lopez de Ullibarri, I. and Jacome, M. A.}
