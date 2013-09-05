@@ -1,11 +1,12 @@
-836f304c88510b7df967cfd704c34897 *ChangeLog
-afadcd512e94aa5bf629321e58183f97 *DESCRIPTION
+082e1f0ed7d04778c7e1c56db42eb675 *ChangeLog
+85591d3ec538dee621b320951f003124 *DESCRIPTION
 f95f1230e411e28c6ed15cd20992291b *NAMESPACE
 117171ea9503b01ec62162ed55eb10f0 *R/presmooth.R
 9d5f9f27dc19b6a972e2f39822c25162 *R/zzz.R
 7d68289b265e2591b24febbbf08e1d8e *data/pscheck.rda
+8e2944cdd35655e0f6f3f9aeef8f2d69 *inst/CITATION
 99040d93fadb0e94f43d9806219c7894 *man/control.presmooth.Rd
-8bbbe003dcfdbee599124dbb6b3c898e *man/presmooth.Rd
+c2181e7eb1edeb69a13b832d1acdeda6 *man/presmooth.Rd
 7f5d7ef4e1df9fbceb6c7da7204012b4 *man/print.survPresmooth.Rd
 289ce93a8e0a969d7fd5ac6fbed845d9 *man/pscheck.Rd
 39c8cfa44e6b3174babc1fff986968f0 *src/alphaintegrand.c
