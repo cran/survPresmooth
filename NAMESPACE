@@ -1,6 +1,8 @@
 useDynLib(survPresmooth)
 
-import(stats)
+importFrom("utils", "head")
+
+import("stats")
 
 export(
   control.presmooth,

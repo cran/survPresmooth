@@ -1,9 +1,23 @@
+Changes in version 1.1-9
+
+	2016/03/09  Ignacio Lopez de Ullibarri <ilu@udc.es>
+
+	* NAMESPACE: 'importFrom("utils", "head")' added.
+
+	* R/presmooth.R (control.presmooth): 'k' argument from version 1.1-2 recovered.
+
+	* R/presmooth.R (presmooth): new 'range.t' added in line 248 (plugin bandwidth without presmoothing for f); 'control$k' reintroduced, multiplying all the appearances of 'range.t' (including line 333, which was not multiplied in version 1.1-2: note that this change modifies all the elements of the default grid); the approach of version 1.1-6 is recovered: in plug-in bandwidth computation for S and H, when p=0 and p.nw=0 the bandwidth is set to the maximum possible value, as it was for p=1 and p.nw=1 (the if-else making the distinction has been removed); the text of the corresponding warning is modified.
+
+	* man/control.presmooth.Rd (usage, arguments, examples): the 'k' argument is reintroduced.
+
 Changes in version 1.1-8
+
 	2013/08/30  Ignacio Lopez de Ullibarri <ilu@udc.es>
 
 	* inst/CITATION: new directory and file with the citation details.
 
 Changes in version 1.1-7
+
 	2013/08/26  Ignacio Lopez de Ullibarri <ilu@udc.es>
 
 	* R/presmooth.R (presmooth): in line 56 'presmoothing == FALSE' replaced with '!presmoothing'; new check: when 'bw.selec' is "fixed", 'presmoothing' is FALSE and 'estimand' is "f" or "h", the presmoothing bandwidth ('fixed.bw[1]') is forced to be 0 or an error is produced if 'fixed.bw' is NULL or his length is not 2; new if-else added in plug-in bandwidth computation for S and H: when p=0 the bandwidth is set to 0, when p=1, the bandwidth is set to the maximum possible value; the same thing is done when p.nw=0 or p.nw=1; the text of the warnings is modified accordingly.

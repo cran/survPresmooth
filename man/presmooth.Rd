@@ -1,7 +1,7 @@
 \name{presmooth}
 \alias{presmooth}
 \title{Compute Presmoothed Estimators}
-\description{This function computes presmoothed estimators of the main functions used in survival analysis (survival function, cumulative hazard function, density function and non-cumulative hazard function) for right-censored data.
+\description{This function computes presmoothed estimators of the main functions used in survival analysis (survival function, cumulative hazard function, density function and non-cumulative hazard function) with right-censored data.
 }
 \usage{
 presmooth(times, status, dataset = NULL, estimand = c("S", "H", "f", "h"), 
@@ -15,7 +15,7 @@ presmooth(times, status, dataset = NULL, estimand = c("S", "H", "f", "h"),
 	An object of mode numeric giving the observed, possibly right-censored times. If dataset is not NULL it is interpreted as the name of the corresponding variable of the dataset.
 	}
 	\item{status}{
-An object of mode numeric giving the censoring status of the times coded in the \code{times} object. Censored values must be coded as 0, uncensored values as 1. If dataset is not NULL it is interpreted as the name of the corresponding variable of the dataset.
+An object of mode numeric giving the censoring status of the times coded in the \code{times} object. Censored values must be coded as 0, uncensored values as 1. If \code{dataset} is not NULL it is interpreted as the name of the corresponding variable of the dataset.
 	}
 	\item{dataset}{
 An optional data frame in which the variables named in \code{times} and \code{status} are interpreted. If it is NULL, \code{times} and \code{status} must be objects of the workspace.
@@ -48,7 +48,7 @@ A (partially matched) character string specifying the end(s) of the data range w
 A numeric vector specifying the points where the estimate will be computed. Only meaningful for density and hazard function estimation. Internally computed when NULL, the default.
 	}
 	\item{control}{
-A list of control values. The default is the value returned by the \code{control.pre}-\code{smooth} function called without arguments.
+A list of control values. The value returned by the \code{control.presmooth} function called without arguments is the default.
 	}
 }
 \value{An object os class 'survPresmooth'. Formally, it is a list with the following components:
@@ -91,7 +91,7 @@ The input for the \code{estimand} argument.
 A numeric vector with the presmoothed estimates at points \code{x.est}.
 	}
 }
-\details{In survival analysis with right-censored data, presmoothing (see references below for details) provides a method to obtain new estimators from classical estimators, essentially by replacing the indicator of non-censoring with a nonparametric estimate (in our implementation through the use of Nadaraya-Watson regression estimator) of the conditional probability of uncensoring. The \code{pres}-\code{mooth} function computes presmoothed versions of: 1) Kaplan-Meier survival function estimator, 2) Nelson-Aalen cumulative hazard function estimator, 3) the kernel density function estimator of Foldes-Rejto-Winter, and 4) the kernel hazard function estimator of Tanner-Wong (similar to that proposed by Yandell and Ramlau-Hansen). All presmoothed estimators have at least one presmoothing bandwidth (the smoothing parameter of the Nadaraya-Watson estimator), but in the case of the kernel estimators of density and hazard they have an additional smoothing bandwidth scaling the kernel.
+\details{In survival analysis with right-censored data, presmoothing (see references below for details) provides a method to obtain new estimators from classical estimators, essentially by replacing the indicator of non-censoring with a nonparametric estimate (in our implementation, through the use of Nadaraya-Watson regression estimator) of the conditional probability of uncensoring. The \code{pres}-\code{mooth} function computes presmoothed versions of: 1) Kaplan-Meier survival function estimator, 2) Nelson-Aalen cumulative hazard function estimator, 3) the kernel density function estimator of Foldes-Rejto-Winter, and 4) the kernel hazard function estimator of Tanner-Wong (similar to that proposed by Yandell and Ramlau-Hansen). All presmoothed estimators have at least one presmoothing bandwidth (the smoothing parameter of the Nadaraya-Watson estimator), but in the case of the kernel estimators of density and hazard they have an additional smoothing bandwidth scaling the kernel.
 
 The \code{presmooth} function incorporates plug-in and bootstrap global bandwidth selectors for every estimator implemented. Plug-in bandwith selection is done according to Cao et al. (2005) in the case of survival and cumulative hazard estimation, and following Jacome et al. (2008) together with the results given in Cao and Lopez-de-Ullibarri (2007) in the case of density and hazard estimation. As for bootstrap bandwidth selection, our method follows the approach of Gonzalez-Manteiga et al. (1996). See Jacome et al. (2008) for more details in the case of density estimation. The weight function needed for the bootstrap bandwidth is taken as constantly equal to 1. The left and right endpoints of its support are fixed via the \code{q.weight} argument of the \code{control.presmooth} function (see the online help for that function) and form the \code{q.weight} component of the value returned by \code{presmooth}. An upper bound equal to the range of the observed times is set for the selected (plug-in or bootstrap) bandwidth. On the other hand, bandwidths can also be fixed by the user. When the presmoothing bandwidth is fixed at 0, the classical, non-presmoothed versions of the estimators are computed. Non-presmoothed estimates are also obtained by calling \code{presmooth} with the value of the \code{presmoothing} argument equal to FALSE. This is equivalent to the previous procedure for survival and cumulative hazard estimation, but not for hazard and density function estimation. In the latter case, a smoothing bandwidth is also selected by \code{presmooth}, instead of being fixed by the user.
 

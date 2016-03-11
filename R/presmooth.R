@@ -1,12 +1,12 @@
 control.presmooth <-
-    function(n.boot = c(5000, 1000), q.weight = c(0.2, 0.8), length.grid.bw.plugin = 100, length.grid.ise = 100, pilot.par.ini= NULL, save.data = FALSE, save.mise = FALSE, na.action = na.omit){
-        list(n.boot = n.boot, q.weight = q.weight, length.grid.bw.plugin = length.grid.bw.plugin, length.grid.ise = length.grid.ise, pilot.par.ini = pilot.par.ini, save.data = save.data, save.mise = save.mise, na.action = na.action)
+    function(n.boot = c(5000, 1000), q.weight = c(0.2, 0.8), k = 1, length.grid.bw.plugin = 100, length.grid.ise = 100, pilot.par.ini= NULL, save.data = FALSE, save.mise = FALSE, na.action = na.omit){
+        list(n.boot = n.boot, q.weight = q.weight, k = k, length.grid.bw.plugin = length.grid.bw.plugin, length.grid.ise = length.grid.ise, pilot.par.ini = pilot.par.ini, save.data = save.data, save.mise = save.mise, na.action = na.action)
     }
 
 presmooth <-
     function(times, status, dataset = NULL, estimand = c("S", "H", "f", "h"), bw.selec = c("fixed", "plug-in", "bootstrap"), presmoothing = TRUE, fixed.bw = NULL, grid.bw.pil = NULL, grid.bw = NULL, kernel = c("biweight", "triweight"), bound = c("none", "left", "right", "both"), x.est = NULL, control = control.presmooth()){
         na.action <- control$na.action
-    # Define the 'internal' data frame
+        # Define the 'internal' data frame
         dfr <-
             if (is.null(dataset))
                 na.action(data.frame(times, status))
@@ -19,7 +19,7 @@ presmooth <-
         dup <- as.integer(duplicated(dfr$t))
         if(length(kernel) > 1)
             kernel <- kernel[1]
-        n.kernel <- pmatch(kernel, c("biweight","triweight"))
+        n.kernel <- pmatch(kernel, c("biweight", "triweight"))
         if(is.na(n.kernel))
             stop("'kernel' argument must be one of 'biweight', 'triweight'")
         else
@@ -140,15 +140,9 @@ presmooth <-
                         coef.logis <- logistfit$coefficients 
                         p <- as.numeric(predict(logistfit, newdata = data.frame(t = grid.plugin), type = "response"))
                         if(all(p > 0.999) | all(p < 0.001)){ # 1st if-else
+                            warning("Pilot bandwidth computation problem. Estimated p is constantly equal to 0 or 1: selected bandwidth taken as the largest value")
                             pilot.bw <- NULL
-                            if (all(p > 0.999)){
-                                warning("Pilot bandwidth computation problem. Estimated p is constantly equal to 1: selected bandwidth taken as the largest value")
-                                bw <- range.t
-                            }
-                            else{
-                                warning("Pilot bandwidth computation problem. Estimated p is constantly equal to 0: no presmoothing is done")
-                                bw <- 0
-                            }
+                            bw <- control$k * range.t
                         }
                         else{
                             if(exp(coef.logis[1]) > .Machine$double.xmax^.1 | exp(coef.logis[1] + grid.plugin[le.plugin]*coef.logis[2]) > .Machine$double.xmax^.1){ # 2nd if-else
@@ -177,25 +171,19 @@ presmooth <-
                                 C2 <- const$c4 / 4 * step.plugin * .C("simpson", C2pre, le.plugin, integral = numeric(1), PACKAGE = "survPresmooth")$integral
     # Formula on page 91 of Lopez de Ullibarri's thesis, modified by considering an empirical upper bound (trying to avoid the sporadical ocurrence of exceedingly large bandwidths)
                                 pilot.bw1 <- (C2/C1 * ifelse(C1 < 0, -1 , 3/2) / n)^(1/5)
-    # Computation of D1 and D2 according to formulas (2.237) and (2.238) on page 125 of López de Ullibarri's thesis
+    # Computation of D1 and D2 according to formulas (2.237) and (2.238) on page 125 of Lopez-de-Ullibarri's thesis
                                 Dintegrand <- .C("dintegrand", grid.plugin, le.plugin, t, n, logistfit$coefficients, estparplug, p, d1int = numeric(le.plugin), d2int = numeric(le.plugin), PACKAGE = "survPresmooth")[c("d1int", "d2int")]
                                 D1 <- const$c1 * step.plugin * .C("simpson", Dintegrand$d1int, le.plugin, integral = numeric(1), PACKAGE = "survPresmooth")$integral
                                 D2 <- -const$c2 * step.plugin * .C("simpson", Dintegrand$d2int, le.plugin, integral = numeric(1), PACKAGE = "survPresmooth")$integral
     # Formula on page 127 of Lopez de Ullibarri's thesis, modified by considering an empirical upper bound (trying to avoid the sporadical ocurrence of too large bandwidths)
                                 pilot.bw2 <- (D2/D1 * ifelse(D1 < 0, 1/2 , -1) / n)^(1/3)
-                                pilot.bw <- pmin(c(pilot.bw1, pilot.bw2), range.t)
-    # Bandwidth (computed according to formulas on page 17 of López-de-Ullibarri's thesis)
+                                pilot.bw <- pmin(c(pilot.bw1, pilot.bw2), control$k * range.t)
+    # Bandwidth (computed according to formulas on page 17 of Lopez-de-Ullibarri's thesis)
                                 p.nw <- .C("nadarayawatson", dfr$t, n, dfr$t, dfr$d, n, pilot.bw[2], n.kernel, phat = numeric(n), PACKAGE = "survPresmooth")$phat
                                 if(all(p.nw[cond] > 0.999) | all(p.nw[cond] < 0.001)){ # 3rd if-else
+                                    warning("Bandwidth computation problem. Estimated p is constantly equal to 0 or 1: selected bandwidth taken as the largest value")
                                     pilot.bw <- NULL
-                                    if (all(p.nw[cond] > 0.999)){
-                                        warning("Bandwidth computation problem. Estimated p is constantly equal to 1: selected bandwidth taken as the largest value")
-                                        bw <- range.t
-                                    }
-                                    else{
-                                        warning("Bandwidth computation problem. Estimated p is constantly equal to 0: no presmoothing is done")
-                                        bw <- 0
-                                    }
+                                    bw <- control$k * range.t
                                 }
                                 else{
                                     esf2 <- 1 - ecdf(dfr$t)(dfr$t) + 1/n
@@ -207,7 +195,7 @@ presmooth <-
                                     alpha <- cumsum(prealpha)
                                     A <- step.plugin * .C("simpson", alpha^2, le.plugin, integral = numeric(1), PACKAGE = "survPresmooth")$integral
     # The same modification than for pilot bandwidths is incorporated
-                                    bw <- if(A < 1e-6 & Q < 1e-6) 0 else min((const$c5 * Q / A / 2 / const$c1^2 / n)^(1/3), range.t)
+                                    bw <- if(A < 1e-6 & Q < 1e-6) 0 else min((const$c5 * Q / A / 2 / const$c1^2 / n)^(1/3), control$k * range.t)
                                 } # 3rd if-else
                             } # 2nd if-else
                         } # 1st if-else
@@ -235,11 +223,11 @@ presmooth <-
                         if(estparplug2[5] < 0.1 | estparplug2[5] > 0.9)
                             estparplug2 <- constrOptim(c(pilot.par.ini[3:4]), llikplugf3, grad = NULL, x = dfr$t, d = dfr$d, ui = rbind(c(1, 0), c(0, 1)), ci = rep(0, 2))$par
                         intf3sq <- integrate(pilot.bw2.integrand, q.w[1], q.w[2], par = estparplug2)$value
-    # If f is replaced by h*p*(1-F)/(1-H), 3rd pilot bandwidth in A. Jácome's thesis is unnecessary
+    # If f is replaced by h*p*(1-F)/(1-H), 3rd pilot bandwidth in Jacome's thesis is unnecessary
                         km <- .C("presmestim", dfr$t, n, dfr$t, n, as.double(0), as.integer(0), as.integer(0), as.numeric(dfr$d), as.integer(0), as.integer(1), pest = numeric(n), PACKAGE = "survPresmooth")$pest
                         fact <- sum((km[cond] / (1 - ecdf(dfr$t)(sort(dfr$t)[cond])))^2 * (dfr$d[order(dfr$t)][cond] == 1))/n
                         pilot.bw3 <- (const$c3 * fact / const$c1 / n / intf3sq)^(1/7)
-                        pilot.bw <- pmin(c(pilot.bw1, pilot.bw2, pilot.bw3), range.t)
+                        pilot.bw <- pmin(c(pilot.bw1, pilot.bw2, pilot.bw3), control$k * range.t)
     # Bandwidth
                         if(presmoothing){
     # Computation of the 5 integrals in psi(L)
@@ -250,14 +238,14 @@ presmooth <-
                             alpha <- cumsum(prealpha)
     # In termsmise.c f replaced by h*p*(1-F)/(1-H)
                             ints1to5 <- .C("termsmise", dfr$t, dfr$d, n, esf, grid.plugin, le.plugin, step.plugin, pilot.bw, n.kernel, n.estimand, alpha, int1 = numeric(1), int2 = numeric(1), int3 = numeric(1), int4 = numeric(1), int5 = numeric(1), PACKAGE = "survPresmooth")[paste("int", 1:5, sep = "")]
-    # The objective function is formula (3.180) for AMISE in López-de-Ullibarri's thesis
+    # The objective function is formula (3.180) for AMISE in Lopez-de-Ullibarri's thesis
     # When minimizing, an empirical upper bound is considered, trying to avoid the sporadical ocurrence of exceedingly large bandwidths
-                            bw <- pmin(constrOptim(pilot.bw[-3], function(pars, n, kern, c1, c2, n.est, ints) .C("funplugin", pars[1], pars[2], n, kern, c1, c2, n.est, ints$int1, ints$int2, ints$int3, ints$int4, ints$int5, fplug = numeric(1), PACKAGE = "survPresmooth")$fplug, grad = NULL, n = n, kern = n.kernel, c1 = const$c1, c2 = const$c2, n.est = n.estimand, ints = ints1to5, ui = rbind(c(1, 0), c(0, 1)), ci = c(0, 0))$par, range.t)
+                            bw <- pmin(constrOptim(pilot.bw[-3], function(pars, n, kern, c1, c2, n.est, ints) .C("funplugin", pars[1], pars[2], n, kern, c1, c2, n.est, ints$int1, ints$int2, ints$int3, ints$int4, ints$int5, fplug = numeric(1), PACKAGE = "survPresmooth")$fplug, grad = NULL, n = n, kern = n.kernel, c1 = const$c1, c2 = const$c2, n.est = n.estimand, ints = ints1to5, ui = rbind(c(1, 0), c(0, 1)), ci = c(0, 0))$par, control$k *range.t)
                         }
                         else{
     # computation of the 2 integrals of the AMISE (instead of the 5 of the general case)
                             ints1to2 <- .C("termsmisenopresmooth", dfr$t, dfr$d, n, esf, grid.plugin, le.plugin, step.plugin, pilot.bw, n.kernel, n.estimand, int1 = numeric(1), int2 = numeric(1), PACKAGE = "survPresmooth")[c("int1","int2")]
-                            bw <- c(0, (const$c2 * ints1to2$int2 / n / const$c1^2 / ints1to2$int1)^(1/5))
+                            bw <- c(0, min((const$c2 * ints1to2$int2 / n / const$c1^2 / ints1to2$int1)^(1/5), control$k * range.t))
                         }
                     },
                     h = {
@@ -279,20 +267,20 @@ presmooth <-
                             llikplugh <- function(p, x) -sum(suppressWarnings(log(dweibull(x, p[1], p[2]))))
                             estparplug <- constrOptim(c(pilot.par.ini[3:4]), llikplugh, grad = NULL, x = dfr$t, ui = rbind(c(1, 0), c(0, 1)), ci = rep(0, 2))$par
                         }
-    # Formula (4.76) for b_1 on page 236 of A. Jácome's thesis
+    # Formula (4.76) for b_1 on page 236 of Jacome's thesis
                         pilot.bw2 <- (const$c3 / const$c1 / n / integrate(pilot.bw2.integrand, q.w[1], q.w[2], par = estparplug)$value)^(1/7)
-                        pilot.bw <- pmin(c(pilot.bw1, pilot.bw2), range.t)
+                        pilot.bw <- pmin(c(pilot.bw1, pilot.bw2), control$k * range.t)
     # Bandwidth
                         if(presmoothing){
                             ints1to5 <- .C("termsmise", dfr$t, dfr$d, n, esf, grid.plugin, le.plugin, step.plugin, pilot.bw, n.kernel, n.estimand, as.double(0), int1 = numeric(1), int2 = numeric(1), int3 = numeric(1), int4 = numeric(1), int5 = numeric(1), PACKAGE = "survPresmooth")[paste("int", 1:5, sep = "")]
-    # The objective function is formula (3.180) for AMISE in López-de-Ullibarri's thesis
+    # The objective function is formula (3.180) for AMISE in Lopez-de-Ullibarri's thesis
     # When minimizing, an empirical upper bound is considered, trying to avoid the sporadical ocurrence of exceedingly large bandwidths
-                            bw <- pmin(constrOptim(pilot.bw, function(pars, n, kern, c1, c2, n.est, ints) .C("funplugin", pars[1], pars[2], n, kern, c1, c2, n.est, ints$int1, ints$int2, ints$int3, ints$int4, ints$int5, fplug = numeric(1), PACKAGE = "survPresmooth")$fplug, grad = NULL, n = n, kern = n.kernel, c1 = const$c1, c2 = const$c2, n.est = n.estimand, ints = ints1to5, ui = rbind(c(1, 0), c(0, 1)), ci = c(0, 0))$par, range.t)
+                            bw <- pmin(constrOptim(pilot.bw, function(pars, n, kern, c1, c2, n.est, ints) .C("funplugin", pars[1], pars[2], n, kern, c1, c2, n.est, ints$int1, ints$int2, ints$int3, ints$int4, ints$int5, fplug = numeric(1), PACKAGE = "survPresmooth")$fplug, grad = NULL, n = n, kern = n.kernel, c1 = const$c1, c2 = const$c2, n.est = n.estimand, ints = ints1to5, ui = rbind(c(1, 0), c(0, 1)), ci = c(0, 0))$par, control$k * range.t)
                         }
                         else{
     # Computation of the 2 integrals of the AMISE (instead of the 5 of the general case)
                             ints1to2 <- .C("termsmisenopresmooth", dfr$t, dfr$d, n, esf, grid.plugin, le.plugin, step.plugin, pilot.bw, n.kernel, n.estimand, int1 = numeric(1), int2 = numeric(1), PACKAGE = "survPresmooth")[c("int1","int2")]
-                            bw <- c(0, min((const$c2 * ints1to2$int2 / n / const$c1^2 / ints1to2$int1)^(1/5), range.t))
+                            bw <- c(0, min((const$c2 * ints1to2$int2 / n / const$c1^2 / ints1to2$int1)^(1/5), control$k * range.t))
                         }
                     }
                     ) # End of switch(estimand)
@@ -327,7 +315,7 @@ presmooth <-
                         max(dfr$t)/8/sum(dfr$d)^0.2
                     }
                 } # End of if 1
-                pilot.bw <- pmin(c(pilot.bw1, pilot.bw2), range.t)
+                pilot.bw <- pmin(c(pilot.bw1, pilot.bw2), control$k * range.t)
     # Bandwith
                 nboot.temp <- as.integer(control$n.boot)
                 n.boot <- 
@@ -342,7 +330,7 @@ presmooth <-
                 grid.ise <- seq(q.w[1], q.w[2], length.out = le.ise)
                 step.ise <- (grid.ise[le.ise] - grid.ise[1])/(le.ise-1)
                 if(is.null(grid.bw)){
-                    grid.bw.1 <- range.t/10 * 10^seq(0, 1, by = 0.05)
+                    grid.bw.1 <- control$k * range.t/10 * 10^seq(0, 1, by = 0.05)
                     grid.bw.2 <- 
                         if(forh & presmoothing)
                             grid.bw.1
@@ -386,7 +374,7 @@ presmooth <-
                 }       
     # Return the bandwidth minimizing the mise
                 pos.min.mise <- max(which(mise == min(mise)))
-                bw <- pmin(if(forh) if(presmoothing) c(grid.bw.1[(pos.min.mise - 1)%%le.bw.1 + 1], grid.bw.2[(pos.min.mise - 1)%/%le.bw.1 + 1]) else c(0, grid.bw.1[pos.min.mise]) else grid.bw.1[pos.min.mise], range.t)
+                bw <- pmin(if(forh) if(presmoothing) c(grid.bw.1[(pos.min.mise - 1)%%le.bw.1 + 1], grid.bw.2[(pos.min.mise - 1)%/%le.bw.1 + 1]) else c(0, grid.bw.1[pos.min.mise]) else grid.bw.1[pos.min.mise], control$k * range.t)
             } # End of bootstrap
             ) # End of switch(n.bw.selec)
     # Estimate
@@ -426,7 +414,7 @@ print.survPresmooth <-
                 h = "hazard function, h(t)"
                 ), "\n\n")
         df <- data.frame(x$x.est, x$estimate)
-        colnames(df) <- c("t", paste(x$estimand,"(t)", sep = ""))
+        colnames(df) <- c("t", paste(x$estimand, "(t)", sep = ""))
         if(long)
             print(df, ...)
         else
