@@ -1,12 +1,12 @@
-a49c941fd953916bdcdd2a598d25ed7f *ChangeLog
-114b7f45f4ad185526db89955453ff97 *DESCRIPTION
-048ec9714594fb15a59fc0fc9db1359a *NAMESPACE
+148ae4d2ced7de56e90171d07eb788c4 *ChangeLog
+00d00ea217b138b6beafcb595c8aa6f4 *DESCRIPTION
+0d89e830bf9897c7ec4b626ff8c05d36 *NAMESPACE
 35cf7969e93e96ef747fd14f49822ddf *R/presmooth.R
 9d5f9f27dc19b6a972e2f39822c25162 *R/zzz.R
 7d68289b265e2591b24febbbf08e1d8e *data/pscheck.rda
-8e2944cdd35655e0f6f3f9aeef8f2d69 *inst/CITATION
+ac54e3f45795b1bb2a2540ea6775a787 *inst/CITATION
 080388765e809844f19590f3c755d23b *man/control.presmooth.Rd
-8c1486da60a36d61943d378f18b6cc29 *man/presmooth.Rd
+fa03a11d7b45a8a34f9877b88355afb1 *man/presmooth.Rd
 7f5d7ef4e1df9fbceb6c7da7204012b4 *man/print.survPresmooth.Rd
 1652e4c80535024523dcf01378c3358f *man/pscheck.Rd
 39c8cfa44e6b3174babc1fff986968f0 *src/alphaintegrand.c
@@ -17,6 +17,7 @@ cab7afdea069357d9f2ec706f9c426f1 *src/dintegrand.c
 d4b77617f4e3fb6122e87d02fe1c34e6 *src/dweibullder.c
 7a2cd3b8f4d68675580ec81abd5b3eb9 *src/ecdfuncens.c
 42ca581f79daa9f016d4347a6100e827 *src/funplugin.c
+ad7000bb23cab550a59f5e2806f87740 *src/init.c
 ae8367b7be69e6e2cf6829be197d8cb7 *src/isevect.c
 46e2a9ccdf8646dc601a679b0d7cfbda *src/kernel.c
 3d8791f167a902dd7d3e37605d65f26f *src/kernelboundary.c

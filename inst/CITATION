@@ -2,8 +2,7 @@ citHeader("To cite survPresmooth in publications use:")
 
 citEntry(entry = "Article",
   title        = "{survPresmooth}: An {R} Package for Presmoothed Estimation in Survival Analysis",
-  author       = personList(as.person("Ignacio {L{\\'o}pez-de-Ullibarri}"),
-                   as.person("M. Amalia J{\\'a}come")),
+  author       = personList(person("Ignacio", "L{\\'o}pez-de-Ullibarri"), as.person("M. Amalia J{\\'a}come")),
   journal      = "Journal of Statistical Software",
   year         = "2013",
   volume       = "54",

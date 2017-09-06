@@ -1,3 +1,13 @@
+Changes in version 1.1-10
+
+	2017/09/06  Ignacio Lopez de Ullibarri <ilu@udc.es>
+
+	* inst/CITATION: citation file modified for use with utils::bibentry().
+	* src: 'init.c' file added for routine registration.
+	* NAMESPACE: the '.registration = TRUE' option is used in the call to 'useDynLib()'.
+	* DESCRIPTION: 'Author' field rewritten; 'NeedsCompilation' field added.
+	* man/presmooth.Rd (examples): typo corrected.
+
 Changes in version 1.1-9
 
 	2016/03/09  Ignacio Lopez de Ullibarri <ilu@udc.es>

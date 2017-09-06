@@ -239,7 +239,7 @@ set.seed(1)
 
 dboot <- presmooth(t, delta, pscheck, estimand = "f", bw.selec = "bootstrap")
 
-# For this example, the estimates with either plugin or bootstrap banwidth are very similar 
+# For this example, the estimates with either plugin or bootstrap bandwidth are very similar 
      
 plot(dpi$x.est, dpi$estimate, xlab = "t", ylab = "Density", ylim = c(0, 
    max(pmax(dpi$estimate, dboot$estimate))), type = "l", col = "blue", lty = 2)

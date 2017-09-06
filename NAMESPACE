@@ -1,4 +1,4 @@
-useDynLib(survPresmooth)
+useDynLib(survPresmooth, .registration = TRUE)
 
 importFrom("utils", "head")
 
