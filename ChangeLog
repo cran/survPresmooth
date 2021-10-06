@@ -1,3 +1,12 @@
+Changes in version 1.1-11
+
+	2021/10/06  Ignacio Lopez de Ullibarri <ilu@udc.es>
+
+	* DESCRIPTION: 'Description' field now includes a references and its doi; some minor changes in other fields.
+	* inst/CITATION: 'doi' field used instead of 'url'.
+	* man: All the files have been revised, reformatting them, adding doi's of the references (with \doi{} instead of \url{}), and correcting some typos.
+	* src/presmestim.c: Fixed error in left-boundary effect correction when 'estimand' is "h" (final denominator is '*nt - j + counter'; before, 'counter' was summed out of the division). Fixed similar error when correcting both boundary effects: 'counter' was missing in '(*nt - j + counter)'.
+
 Changes in version 1.1-10
 
 	2017/09/06  Ignacio Lopez de Ullibarri <ilu@udc.es>

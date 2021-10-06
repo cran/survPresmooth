@@ -1,6 +1,6 @@
 #include "survPresmooth.h"
 
-void termsmise(double *t, int *delta, int *n, double *esf, double *grid, int *legrid, double *step, double *bw, int *nkernel, int *nestimand, double *alpha, double *integral1, double *integral2, double *integral3, double *integral4, double *integral5){
+void termsmise(double *t, int *delta, int *n, double *esf, double *grid, int *legrid, double *step, double *bw, int *nkernel, int *nestimand, double *alpha, double *integral1, double *integral2, double *integral3, double *integral4, double *integral5) {
 
   int i, *temp, *pnull;
   double *pnull2, *p, *p1, *p2, *pt, *S, *f2, *h, *h1, *h2, *integrand1, *integrand2, *integrand3, *integrand4, *integrand5;
@@ -26,12 +26,12 @@ void termsmise(double *t, int *delta, int *n, double *esf, double *grid, int *le
   densuncens(grid, legrid, t, n, &(bw[1]), nkernel, temp, h);
   *temp = 1;
   densuncens(grid, legrid, t, n, &(bw[1]), nkernel, temp, h1);
-  if(*nestimand == 3){
+  if (*nestimand == 3) {
 // f
     nadarayawatson(t, n, t, delta, n, &(bw[0]), nkernel, pt);
     presmestim(grid, legrid, t, n, pnull2, pnull, pnull, pt, pnull, temp, S);
     presmdens2der(grid, legrid, t, n, &(bw[2]), nkernel, pt, f2);
-    for (i = 0; i < *legrid; i++){
+    for (i = 0; i < *legrid; i++) {
       integrand1[i] = pow(f2[i], 2);
       integrand2[i] = f2[i] * 2 * S[i] / esf[i] * (p1[i] * h1[i] + p2[i] * h[i] / 2  - p[i] * h[i] * alpha[i]);
       integrand3[i] = pow(2 * S[i] / esf[i] * (p1[i] * h1[i] + p2[i] * h[i] / 2 - p[i] * h[i] * alpha[i]), 2);
@@ -39,16 +39,17 @@ void termsmise(double *t, int *delta, int *n, double *esf, double *grid, int *le
       integrand5[i] = h[i] * p[i] * (1-p[i]) * pow(S[i]/esf[i], 2);
     }
   }
-  else if (*nestimand == 4){
+  else
+    if (*nestimand == 4) {
 // h
     *temp = 2;
     densuncens(grid, legrid, t, n, &(bw[1]), nkernel, temp, h2);
-    for (i = 0; i < *legrid; i++){
-      integrand1[i] = pow(((h2[i] + 3*h[i]*h1[i]/esf[i] + 2*pow(h[i],3)/pow(esf[i],2))*p[i] + 2*(h1[i] + pow(h[i],2)/esf[i])*p1[i] + h[i]*p2[i])/esf[i], 2);
-      integrand2[i] = ((h2[i] + 3*h[i]*h1[i]/esf[i] + 2*pow(h[i],3)/pow(esf[i],2))*p[i] + 2*(h1[i] + pow(h[i],2)/esf[i])*p1[i] + h[i]*p2[i]) * (h[i]*p2[i] + 2*h1[i]*p1[i]/pow(esf[i],2));
-      integrand3[i] = pow((h[i]*p2[i] + 2*h1[i]*p1[i])/esf[i],2);
-      integrand4[i] = h[i] * pow(p[i],2) / pow(esf[i],2);
-      integrand5[i] = h[i]*p[i]*(1 - p[i]) / pow(esf[i],2);
+    for (i = 0; i < *legrid; i++) {
+      integrand1[i] = pow(((h2[i] + 3 * h[i] * h1[i] / esf[i] + 2 * pow(h[i], 3) / pow(esf[i], 2)) * p[i] + 2 * (h1[i] + pow(h[i], 2) / esf[i]) * p1[i] + h[i] * p2[i]) / esf[i], 2);
+      integrand2[i] = ((h2[i] + 3 * h[i] * h1[i] / esf[i] + 2 * pow(h[i], 3) / pow(esf[i], 2))*p[i] + 2 * (h1[i] + pow(h[i], 2) / esf[i]) * p1[i] + h[i] * p2[i]) * (h[i]*p2[i] + 2 * h1[i] * p1[i] / pow(esf[i], 2));
+      integrand3[i] = pow((h[i] * p2[i] + 2 * h1[i] * p1[i]) / esf[i], 2);
+      integrand4[i] = h[i] * pow(p[i],2) / pow(esf[i], 2);
+      integrand5[i] = h[i] * p[i] * (1 - p[i]) / pow(esf[i], 2);
     }
   }
   simpson(integrand1, legrid, integral1);
@@ -79,8 +80,3 @@ void termsmise(double *t, int *delta, int *n, double *esf, double *grid, int *le
   free(integrand4);
   free(integrand5);
 }
-
-
-
-
-

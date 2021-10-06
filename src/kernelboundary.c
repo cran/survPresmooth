@@ -1,5 +1,5 @@
-double kernelboundary (double x, double q, int nkernel){
-  switch(nkernel){
+double kernelboundary (double x, double q, int nkernel) {
+  switch(nkernel) {
   case 1: 
     return 15.0 / (1.0 + q) / (1.0 + q) / (1.0 + q) / (1.0 + q) / (1.0 + q) * (x + 1.0) * (x + 1.0) * (q - x) * (2.0 * x * (5.0 * (1.0 - q) / (1.0 + q) - 1.0) + (3.0 * q - 1.0)+ 5.0 * (1.0 - q) * (1.0 - q) / (1.0 + q));
     break;

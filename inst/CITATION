@@ -8,8 +8,7 @@ citEntry(entry = "Article",
   volume       = "54",
   number       = "11",
   pages        = "1--26",
-  url          = "http://www.jstatsoft.org/v54/i11/",
-
+  doi          = "10.18637/jss.v054.i11",
   textVersion  =
   paste("Ignacio Lopez-de-Ullibarri, M. Amalia Jacome (2013).",
         "survPresmooth: An R Package for Presmoothed Estimation in Survival Analysis.",

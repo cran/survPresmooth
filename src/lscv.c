@@ -1,6 +1,6 @@
 #include "survPresmooth.h"
 
-void lscv(double *t, int *delta, int *n, double *gridbw, int *legridbw, int *nkernel, double *cv){
+void lscv(double *t, int *delta, int *n, double *gridbw, int *legridbw, int *nkernel, double *cv) {
   int i, j, k, l, *temp1, *temp2, *temp3;
   double *temp4, *phat;
 
@@ -11,11 +11,13 @@ void lscv(double *t, int *delta, int *n, double *gridbw, int *legridbw, int *nke
   temp4 = malloc((*n-1) * sizeof(double));
   *temp2 = 1;
   *temp3 = *n-1;
-  for(i = 0; i < *legridbw; i++)
-    for(j = 0; j < *n; j++){
-      for(k = 0; k < (*n-1); k++){
-	if (k == j) l = k+1;
-	else l = k;
+  for (i = 0; i < *legridbw; i++)
+    for (j = 0; j < *n; j++) {
+      for (k = 0; k < (*n-1); k++) {
+	if (k == j)
+	  l = k+1;
+	else
+	  l = k;
 	temp1[k] = delta[l];
 	temp4[k] = t[l];
       }

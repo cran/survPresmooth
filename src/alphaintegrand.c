@@ -1,6 +1,6 @@
 #include "survPresmooth.h"
 
-void alphaintegrand(double *t, int *delta, int *n, double *grid, int *legrid, double *bw1, double *bw2, int *nkernel, double *alphaint){
+void alphaintegrand(double *t, int *delta, int *n, double *grid, int *legrid, double *bw1, double *bw2, int *nkernel, double *alphaint) {
   int i, *temp;
   double *p, *p1, *p2, *d, *d1, *ecdf;
 
@@ -17,7 +17,7 @@ void alphaintegrand(double *t, int *delta, int *n, double *grid, int *legrid, do
   *temp = 1;
   densuncens(grid, legrid, t, n, bw2, nkernel, temp, d1);
   for (i = 0; i < *legrid; i++)
-    alphaint[i] = (d1[i] * p1[i] + d[i] * p2[i]/2) / (1 - ecdf[i] + 1/(*n));
+    alphaint[i] = (d1[i] * p1[i] + d[i] * p2[i]/2) / (1 - ecdf[i] + 1 / (*n));
   free(temp);
   free(p);
   free(p1);

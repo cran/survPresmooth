@@ -1,6 +1,6 @@
 #include "survPresmooth.h"
 
-void termsmisenopresmooth(double *t, int *delta, int *n, double *esf, double *grid, int *legrid, double *step, double *bw, int *nkernel, int *nestimand, double *integral1, double *integral2){
+void termsmisenopresmooth(double *t, int *delta, int *n, double *esf, double *grid, int *legrid, double *step, double *bw, int *nkernel, int *nestimand, double *integral1, double *integral2) {
 
   int i, *temp, *pnull;
   double *pnull2, *p, *p1, *p2, *pt, *S, *f2, *h, *h1, *h2, *integrand1, *integrand2, *deltadbl;
@@ -16,7 +16,7 @@ void termsmisenopresmooth(double *t, int *delta, int *n, double *esf, double *gr
   nadarayawatsonder(grid, legrid, t, delta, n, &(bw[0]), nkernel, p, p1, p2);
   densuncens(grid, legrid, t, n, &(bw[1]), nkernel, temp, h);
   *temp = 1;
-  if(*nestimand == 3){
+  if (*nestimand == 3) {
 //f
     pnull = calloc(1, sizeof(int));
     pnull2 = calloc(1, sizeof(double));
@@ -30,7 +30,7 @@ void termsmisenopresmooth(double *t, int *delta, int *n, double *esf, double *gr
       deltadbl[i] = (double)delta[i];
     presmestim(grid, legrid, t, n, pnull2, pnull, pnull, deltadbl, pnull, temp, S);
     presmdens2der(grid, legrid, t, n, &(bw[2]), nkernel, pt, f2);
-    for (i = 0; i < *legrid; i++){
+    for (i = 0; i < *legrid; i++) {
       integrand1[i] = pow(f2[i], 2);
       integrand2[i] = h[i] * p[i] * pow(S[i] / esf[i], 2);
     }
@@ -42,15 +42,15 @@ void termsmisenopresmooth(double *t, int *delta, int *n, double *esf, double *gr
     free(deltadbl);
   }
   else 
-    if (*nestimand == 4){
+    if (*nestimand == 4) {
 // h
       h1 = malloc(*legrid * sizeof(double));
       h2 = malloc(*legrid * sizeof(double)); 
       densuncens(grid, legrid, t, n, &(bw[1]), nkernel, temp, h1);
       *temp = 2;
       densuncens(grid, legrid, t, n, &(bw[1]), nkernel, temp, h2);
-      for (i = 0; i < *legrid; i++){
-	integrand1[i] = pow(((h2[i] + 3*h[i]*h1[i]/esf[i] + 2*pow(h[i],3)/pow(esf[i],2))*p[i] + 2*(h1[i] + pow(h[i],2)/esf[i])*p1[i] + h[i]*p2[i])/esf[i], 2);
+      for (i = 0; i < *legrid; i++) {
+	integrand1[i] = pow(((h2[i] + 3 * h[i] * h1[i] / esf[i] + 2 * pow(h[i],3) / pow(esf[i],2)) * p[i] + 2 * (h1[i] + pow(h[i],2) / esf[i]) * p1[i] + h[i] * p2[i]) / esf[i], 2);
 	integrand2[i] = h[i] * p[i] / pow(esf[i],2);
       }
       free(h1);

@@ -1,7 +1,7 @@
 double kernelder(double x, int nkernel, int deriv) {
-  switch(nkernel){
+  switch (nkernel) {
   case 1:
-    switch(deriv){
+    switch (deriv) {
     case 0: 
       return 15.0/16.0 * (1.0 - x * x) * (1.0 - x * x);
       break;
@@ -17,7 +17,7 @@ double kernelder(double x, int nkernel, int deriv) {
     }
     break;
   case 2:
-    switch(deriv){
+    switch (deriv) {
     case 0: 
       return 35.0/32.0 * (1.0 - x * x) * (1.0 - x * x) * (1.0 - x * x);
       break;
@@ -33,7 +33,7 @@ double kernelder(double x, int nkernel, int deriv) {
     }
     break;
   default:
-    switch(deriv){
+    switch (deriv) {
     case 0: 
       return 15.0/16.0 * (1.0 - x * x) * (1.0 - x * x);
       break;
